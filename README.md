@@ -1,4 +1,4 @@
-﻿<div id="top"></div>
+<div id="top"></div>
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -32,18 +32,17 @@ This section should list any major frameworks/libraries used to bootstrap your p
 ### Configurations
 
 ### Local
+🔥[WIP]🔥
 
 ### Spring Cloud Config
+🔥[WIP]🔥
 
 ### Azure App Configuration
+🔥[WIP]🔥
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-
-Keep the Config Server running, using docker-compose for example, the api needs this to be up in order to get the configurations 🤓
-
-There is an WebApi called Sample inside the folder /tests
-
+🔥[WIP]🔥
 <!-- ROADMAP -->
 ## Roadmap
 
