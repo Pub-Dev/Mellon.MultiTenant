@@ -5,13 +5,13 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<Title>Mellon - MultiTenant</Title>
-		<PackageId>Mellon.MultiTenant</PackageId>
-		<Authors>1berto - Naga</Authors>
+		<PackageId>Mellon-MultiTenant</PackageId>
+		<Authors>1berto and Naga</Authors>
 		<Company>PubDev</Company>
-		<Description>Pacote de testes para live do PubDev</Description>
+		<Description>A Package to create Multi-Tenant Applications using NET</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageProjectUrl>https://github.com/Pub-Dev/Dotnet-nuget</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/Pub-Dev/Dotnet-nuget</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/1bberto/Mellon.MultiTenant</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/1bberto/Mellon.MultiTenant</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<PackageIcon>logo.png</PackageIcon>
@@ -24,18 +24,11 @@
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="5.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="5.2.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="5.2.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="5.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="5.2.0" />
 		<PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="3.2.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="5.2.0" />
 		<PackageReference Include="Steeltoe.Extensions.Configuration.PlaceholderCore" Version="3.2.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="5.2.0" />
 	</ItemGroup>
-
 
 	<ItemGroup>
 		<None Include="docs\readme.md" Pack="true" PackagePath="\" />
