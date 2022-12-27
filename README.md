@@ -19,8 +19,6 @@ This library was created to supply a set of tools to enable the creation of mult
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
 * [Azure App Configuration](https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview)
 * [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/reference/html/)
 * [net6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
@@ -35,9 +33,13 @@ This section should list any major frameworks/libraries used to bootstrap your p
 🔥[WIP]🔥
 
 ### Spring Cloud Config
+
+To setup your environment [DotNet-ConfigServer](https://github.com/Pub-Dev/Lesson-DotNet-ConfigServer)
+
 🔥[WIP]🔥
 
 ### Azure App Configuration
+
 🔥[WIP]🔥
 
 <!-- USAGE EXAMPLES -->
