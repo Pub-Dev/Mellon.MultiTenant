@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "WebAPI": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "TENANT": "clientA, clientB, clientC"
+      },
+      "applicationUrl": "https://localhost:63474;http://localhost:63475"
+    }
+  }
+}
