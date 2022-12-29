@@ -5,6 +5,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
+[![LinkedIn][linkedin-shield]][linkedin2-url]
 
 ## Mellon.MultiTenant
 
@@ -71,6 +72,7 @@ Don't forget to give the project a star! Thanks again!
 ## Contact
 
 Humberto Rodrigues - [@1bberto](https://instagram.com/1bberto) - humberto_henrique1@live.com
+Rafael Nagai - [@naganaga](https://instagram.com/rafakenji23) - rafakenji23@gmail.com
 
 Project Link: [https://github.com/1bberto/Mellon.MultiTenant](https://github.com/1bberto/Mellon.MultiTenant)
 
@@ -94,3 +96,4 @@ Project Link: [https://github.com/1bberto/Mellon.MultiTenant](https://github.com
 [issues-url]: https://github.com/1bberto/Mellon.MultiTenant/issues
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/humbberto
+[linkedin2-url]: https://br.linkedin.com/in/rafakenji
