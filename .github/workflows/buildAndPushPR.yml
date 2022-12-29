@@ -3,8 +3,9 @@ name: Build, Pack and Publish
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push events but only for the main branch
-  push:
-    branches: [main]
+  pull_request:
+    branches:
+      - "feature/**"
     paths-ignore:
       - "**/README.md"
       - "**/samples/*"
@@ -37,7 +38,7 @@ jobs:
         run: dotnet build ./src/Mellon.MultiTenant/Mellon.MultiTenant.csproj --no-restore
 
       - name: Create the package
-        run: dotnet pack --configuration Release ./src/Mellon.MultiTenant/Mellon.MultiTenant.csproj -p:Version=1.0.${{ github.run_number }}
+        run: dotnet pack --configuration Release ./src/Mellon.MultiTenant/Mellon.MultiTenant.csproj -p:Version=1.0.${{ github.run_number }}-alpha
 
       - name: Publish the package to nuget.org
         run: dotnet nuget push ./src/Mellon.MultiTenant/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
