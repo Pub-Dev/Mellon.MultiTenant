@@ -1,24 +1,20 @@
-﻿using Azure.Identity;
-using Mellon.MultiTenant.Enums;
+﻿using Mellon.MultiTenant.Enums;
+using Mellon.MultiTenant.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Steeltoe.Extensions.Configuration.ConfigServer;
-using Steeltoe.Extensions.Configuration.Placeholder;
 
 namespace Mellon.MultiTenant;
 public class MultiTenantSettings
 {
-    Dictionary<string, IConfiguration> Configurations = new Dictionary<string, IConfiguration>();
+    Dictionary<string, IConfigurationRoot> configurations = new Dictionary<string, IConfigurationRoot>();
 
-    public List<string> Tenants { get; private set; } = new List<string>();
+    public List<string> Tenants => configurations?.Keys.ToList();
 
-    public void LoadConfiguration(string tenant, IConfiguration configuration)
+    public void LoadConfiguration(string tenant, IConfigurationRoot configuration)
     {
-        if (!Configurations.ContainsKey(tenant))
+        if (!configurations.ContainsKey(tenant))
         {
-            Configurations[tenant] = configuration;
-
-            Tenants.Add(tenant);
+            configurations[tenant] = configuration;
         }
         else
         {
@@ -26,7 +22,7 @@ public class MultiTenantSettings
         }
     }
 
-    public Dictionary<string, IConfiguration> GetConfigurations => Configurations;
+    public IReadOnlyDictionary<string, IConfigurationRoot> GetConfigurations => configurations;
 
     public string[] LoadTenants(
         MultiTenantOptions multiTenantOptions,
@@ -44,36 +40,25 @@ public class MultiTenantSettings
     }
 
     public IConfigurationRoot BuildTenantConfiguration(
-        MultiTenantOptions multiTenantOptions,
         IHostEnvironment hostEnvironment,
+        MultiTenantOptions multiTenantOptions,
         string tenant)
     {
         var builder = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json", true)
-                    .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true);
+                    .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true)
+                    .AddEnvironmentVariables();
 
         switch (multiTenantOptions.ConfigurationSource)
         {
             case ConfigurationSource.Azure:
-                var credentials = new ManagedIdentityCredential();
-
-                builder.AddAzureAppConfiguration(options =>
-                {
-                    options.Connect(new Uri(Environment.GetEnvironmentVariable("AzureAppConfigurationEndPointURL")), credentials)
-                        .ConfigureKeyVault(kv => { kv.SetCredential(credentials); })
-                        .Select("*", tenant);
-                });
+                builder.AddAzure(multiTenantOptions, tenant);
                 break;
             case ConfigurationSource.SpringCloud:
-                builder
-                    .AddConfigServer(
-                        hostEnvironment.EnvironmentName,
-                        $"{multiTenantOptions.ApplicationName ?? hostEnvironment.ApplicationName}-{tenant}")
-                    .AddPlaceholderResolver();
+                builder.AddSpringCloudConfig(hostEnvironment, multiTenantOptions, tenant);
                 break;
             case ConfigurationSource.Local:
-                builder.AddJsonFile($"appsettings.{tenant}.json", true);
-                builder.AddJsonFile($"appsettings.{tenant}.{hostEnvironment.EnvironmentName}.json", true);
+                builder.AddLocalConfig(hostEnvironment, tenant);
                 break;
             default:
                 break;
@@ -81,4 +66,6 @@ public class MultiTenantSettings
 
         return builder.Build();
     }
+
+
 }

@@ -5,7 +5,7 @@
       "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "TENANT": "clientA, clientB, clientC"
+        "MULTITENANT_TENANTS": "client-a,client-b,client-c"
       },
       "applicationUrl": "https://localhost:63474;http://localhost:63475"
     }

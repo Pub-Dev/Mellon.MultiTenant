@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Mellon.MultiTenant.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Primitives;
 
 namespace Mellon.MultiTenant.Middlewares;
 
 public class HttpTenantIdentifierMiddleware
 {
-    private const string TENAND_KEY_NAME = "x-tenant-name";
-
     private readonly RequestDelegate _next;
 
     public HttpTenantIdentifierMiddleware(
@@ -25,17 +23,14 @@ public class HttpTenantIdentifierMiddleware
 
             var multiTenantOptions = context.RequestServices.GetRequiredService<MultiTenantOptions>();
 
-            StringValues tenant = default;
-
-            if (multiTenantOptions.HttpHeaderKey is not null &&
-                context.Request.Headers.TryGetValue(multiTenantOptions.HttpHeaderKey, out tenant))
+            if (context.TryExtractTenantFromHttpContext(multiTenantOptions, out var tenant))
             {
-                tenantSettings.SetTenant(tenant);
+                tenantSettings.SetCurrentTenant(tenant);
             }
-            else if (multiTenantOptions.QueryStringKey is not null &&
-                context.Request.Query.TryGetValue(multiTenantOptions.QueryStringKey, out tenant))
+
+            if (tenantSettings.Tenant is null && multiTenantOptions.DefaultTenant is not null)
             {
-                tenantSettings.SetTenant(tenant);
+                tenantSettings.SetCurrentTenant(multiTenantOptions.DefaultTenant);
             }
 
             if (tenantSettings.Tenant is null)

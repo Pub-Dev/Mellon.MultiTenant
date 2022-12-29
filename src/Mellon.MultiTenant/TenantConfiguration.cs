@@ -6,18 +6,15 @@ namespace Mellon.MultiTenant;
 
 public class TenantConfiguration : IMultiTenantConfiguration
 {
-    private readonly TenantSettings _tenantSettings;
-
+    public string Tenant { get; }
     public IConfiguration Configuration { get; }
-    public TenantSettings TenantSettings => _tenantSettings;
 
     public TenantConfiguration(
-        TenantSettings tenantSettings,
-        IConfiguration configuration)
+        TenantSettings tenantSettings)
     {
-        Configuration = tenantSettings.Configuration ?? configuration;
-        
-        _tenantSettings = tenantSettings;
+        Tenant = tenantSettings.Tenant;
+
+        Configuration = tenantSettings.Configuration;
     }
 
     public string this[string key] { get => Configuration[key]; set => Configuration[key] = value; }

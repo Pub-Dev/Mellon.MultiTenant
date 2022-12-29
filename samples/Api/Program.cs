@@ -19,28 +19,18 @@ app.UseMultiTenant();
 
 app.MapGet("/full", (IMultiTenantConfiguration configuration) =>
 {
-    return (((Mellon.MultiTenant.TenantConfiguration)configuration).Configuration as IConfigurationRoot).GetDebugView(); 
+    return (((Mellon.MultiTenant.TenantConfiguration)configuration).Configuration as IConfigurationRoot).GetDebugView();
 });
 
-app.MapGet("/", (IMultiTenantConfiguration configuration, MultiTenantOptions multiTenantOptions) =>
+app.MapGet("/", (
+    IMultiTenantConfiguration configuration,
+    MultiTenantOptions multiTenantOptions) =>
 {
     return new
     {
         multiTenantOptions,
-        Tenant = configuration.TenantSettings.Tenant,
-        Logging = new
-        {
-            LogLevel = new
-            {
-                Default = configuration["Logging:LogLevel:Default"]
-            }
-        },
-        ConnectionString = new
-        {
-            SqlServer = configuration["ConnectionString:SqlServer"],
-            Cassandra = configuration["ConnectionString:Cassandra"],
-            Redis = configuration["ConnectionString:Redis"],
-        }
+        Tenant = configuration.Tenant,
+        Message = configuration["Message"],
     };
 });
 
