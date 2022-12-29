@@ -1,4 +1,4 @@
-name: Build, Pack and Publish
+name: Build, Pack and Publish (ALPHA)
 
 # Controls when the workflow will run
 on:
