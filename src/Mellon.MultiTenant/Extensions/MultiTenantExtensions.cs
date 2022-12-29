@@ -11,9 +11,10 @@ namespace Mellon.MultiTenant.Extensions;
 public static class MultiTenantExtensions
 {
     private static IServiceCollection AddMultiTenant(
-        this IServiceCollection services, MultiTenantOptions multiTenantOptions)
+        this IServiceCollection services,
+        MultiTenantOptions multiTenantOptions)
     {
-        services.AddSingleton((serviceProvider) =>
+        services.AddSingleton<MultiTenantSettings>((serviceProvider) =>
         {
             var multiTenantSettings = new MultiTenantSettings();
 
@@ -34,7 +35,7 @@ public static class MultiTenantExtensions
             {
                 multiTenantSettings.LoadConfiguration(
                     tenant,
-                    multiTenantSettings.BuildTenantConfiguration(multiTenantOptions, hostEnvironment, tenant));
+                    multiTenantSettings.BuildTenantConfiguration(hostEnvironment, multiTenantOptions, tenant));
             }
 
             return multiTenantSettings;
@@ -79,35 +80,58 @@ public static class MultiTenantExtensions
 
         if (builder is IEndpointRouteBuilder routeBuilder)
         {
-            routeBuilder.Map("refresh-settings", (
-                MultiTenantOptions multiTenantOptions,
-                IConfiguration configuration,
-                IHostEnvironment hostEnvironment,
-                MultiTenantSettings multiTenantSettings) =>
-            {
-                foreach (var tenant in multiTenantSettings.LoadTenants(multiTenantOptions, configuration))
-                {
-                    if (multiTenantSettings.GetConfigurations.TryGetValue(tenant, out var conf))
-                    {
-                        if (conf is IConfigurationRoot root)
-                        {
-                            root.Reload();
-                        }
-                    }
-                    else
-                    {
-                        multiTenantSettings.LoadConfiguration(
-                            tenant,
-                            multiTenantSettings.BuildTenantConfiguration(multiTenantOptions, hostEnvironment, tenant));
-                    }
-                }
-
-                return new { Message = "Refresh Done!" };
-            });
+            routeBuilder.AddRefreshEndpoint();
         }
 
         builder.ApplicationServices.GetRequiredService<MultiTenantSettings>();
 
         return builder;
+    }
+
+    private static IEndpointRouteBuilder AddRefreshEndpoint(this IEndpointRouteBuilder routeBuilder)
+    {
+        routeBuilder.Map("refresh-settings", (
+                string? tenantName,
+                IConfiguration configuration,
+                IHostEnvironment hostEnvironment,
+                MultiTenantOptions multiTenantOptions,
+                MultiTenantSettings multiTenantSettings) =>
+        {
+            bool TryFindAndRefreshSettings(string tenantName)
+            {
+                if (multiTenantSettings.GetConfigurations.TryGetValue(tenantName, out var conf))
+                {
+                    if (conf is IConfigurationRoot configurationRoot)
+                    {
+                        configurationRoot.Reload();
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(tenantName))
+            {
+                TryFindAndRefreshSettings(tenantName);
+            }
+            else
+            {
+                foreach (var tenant in multiTenantSettings.LoadTenants(multiTenantOptions, configuration))
+                {
+                    if (!TryFindAndRefreshSettings(tenant))
+                    {
+                        multiTenantSettings.LoadConfiguration(
+                            tenant,
+                            multiTenantSettings.BuildTenantConfiguration(hostEnvironment, multiTenantOptions, tenant));
+                    }
+                }
+            }
+
+            return new { Message = "Refresh Done!" };
+        });
+
+        return routeBuilder;
     }
 }

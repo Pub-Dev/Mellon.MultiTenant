@@ -4,5 +4,5 @@ namespace Mellon.MultiTenant.Interfaces;
 
 public interface IMultiTenantConfiguration : IConfiguration
 {
-    TenantSettings TenantSettings { get; }
+    public string Tenant { get; }
 }

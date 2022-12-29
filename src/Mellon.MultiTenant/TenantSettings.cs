@@ -8,14 +8,14 @@ public class TenantSettings
 
     public string Tenant { get; private set; }
 
-    public IConfiguration? Configuration => Tenant is null ? null : _multiTenantSettings.GetConfigurations[Tenant];
+    public IConfiguration Configuration => Tenant is null ? null : _multiTenantSettings.GetConfigurations[Tenant];
 
     public TenantSettings(MultiTenantSettings multiTenantSettings)
     {
         _multiTenantSettings = multiTenantSettings;
     }
 
-    public void SetTenant(string tenant)
+    public void SetCurrentTenant(string tenant)
     {
         if (_multiTenantSettings.GetConfigurations.ContainsKey(tenant))
         {
