@@ -5,7 +5,7 @@ on:
   # Triggers the workflow on push events but only for the main branch
   pull_request:
     branches:
-      - "feature/**"
+      - "main"
     paths-ignore:
       - "**/README.md"
       - "**/samples/*"
