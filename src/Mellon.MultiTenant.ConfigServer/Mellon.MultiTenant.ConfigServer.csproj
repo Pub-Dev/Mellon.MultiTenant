@@ -18,17 +18,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="..\..\readme.md" Pack="true" PackagePath="\" />
+		<None Include="..\..\logo.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="3.2.1" />
 		<PackageReference Include="Steeltoe.Extensions.Configuration.PlaceholderCore" Version="3.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Mellon.MultiTenant.Base\Mellon.MultiTenant.Base.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="..\..\readme.md" Pack="true" PackagePath="\" />
-		<None Include="..\..\logo.png" Pack="true" PackagePath="\" />
-	</ItemGroup>
+	</ItemGroup>	
 
 </Project>
