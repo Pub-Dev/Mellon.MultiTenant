@@ -10,7 +10,7 @@ public class TenantSettings2
 
     public IConfiguration Configuration => Tenant is null ? null : _multiTenantSettings.GetConfigurations[Tenant];
 
-    public TenantSettings(MultiTenantSettings multiTenantSettings)
+    public TenantSettings2(MultiTenantSettings multiTenantSettings)
     {
         _multiTenantSettings = multiTenantSettings;
     }
