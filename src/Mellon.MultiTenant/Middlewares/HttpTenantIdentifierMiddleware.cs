@@ -1,4 +1,5 @@
-﻿using Mellon.MultiTenant.Extensions;
+﻿using Mellon.MultiTenant.Base;
+using Mellon.MultiTenant.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 

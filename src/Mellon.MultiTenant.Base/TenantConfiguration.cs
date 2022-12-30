@@ -2,11 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 
-namespace Mellon.MultiTenant;
+namespace Mellon.MultiTenant.Base;
 
 public class TenantConfiguration : IMultiTenantConfiguration
 {
     public string Tenant { get; }
+
     public IConfiguration Configuration { get; }
 
     public TenantConfiguration(

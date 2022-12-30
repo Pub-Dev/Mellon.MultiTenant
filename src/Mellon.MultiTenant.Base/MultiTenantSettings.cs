@@ -1,12 +1,13 @@
-﻿using Mellon.MultiTenant.Enums;
-using Mellon.MultiTenant.Extensions;
+﻿using Mellon.MultiTenant.Base.Enums;
+using Mellon.MultiTenant.Base.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace Mellon.MultiTenant;
+namespace Mellon.MultiTenant.Base;
+
 public class MultiTenantSettings
 {
-    Dictionary<string, IConfigurationRoot> configurations = new Dictionary<string, IConfigurationRoot>();
+    private Dictionary<string, IConfigurationRoot> configurations = new Dictionary<string, IConfigurationRoot>();
 
     public List<string> Tenants => configurations?.Keys.ToList();
 
@@ -31,9 +32,11 @@ public class MultiTenantSettings
         switch (multiTenantOptions.TenantSource)
         {
             case TenantSource.EnvironmentVariables:
-                return Environment.GetEnvironmentVariable("MULTITENANT_TENANTS").Split(',', StringSplitOptions.RemoveEmptyEntries);
+                return configuration["MULTITENANT_TENANTS"].Split(',', StringSplitOptions.RemoveEmptyEntries);
+
             case TenantSource.AppSettings:
                 return configuration.GetSection("MultiTenant:Tenants").Get<string[]>();
+
             default:
                 throw new Exception($"{nameof(multiTenantOptions.TenantSource)} not set!");
         }
@@ -41,6 +44,7 @@ public class MultiTenantSettings
 
     public IConfigurationRoot BuildTenantConfiguration(
         IHostEnvironment hostEnvironment,
+        IMultiTenantSource multiTenantSource,
         MultiTenantOptions multiTenantOptions,
         string tenant)
     {
@@ -49,23 +53,8 @@ public class MultiTenantSettings
                     .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true)
                     .AddEnvironmentVariables();
 
-        switch (multiTenantOptions.ConfigurationSource)
-        {
-            case ConfigurationSource.Azure:
-                builder.AddAzure(multiTenantOptions, tenant);
-                break;
-            case ConfigurationSource.SpringCloud:
-                builder.AddSpringCloudConfig(hostEnvironment, multiTenantOptions, tenant);
-                break;
-            case ConfigurationSource.Local:
-                builder.AddLocalConfig(hostEnvironment, tenant);
-                break;
-            default:
-                break;
-        }
+        builder = multiTenantSource.AddSource(tenant, builder);
 
         return builder.Build();
     }
-
-
 }

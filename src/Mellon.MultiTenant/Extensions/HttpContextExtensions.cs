@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Mellon.MultiTenant.Base;
+using Microsoft.AspNetCore.Http;
 
 namespace Mellon.MultiTenant.Extensions
 {

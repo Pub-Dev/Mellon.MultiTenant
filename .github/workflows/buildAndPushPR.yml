@@ -1,27 +1,18 @@
 name: Build, Pack and Publish (ALPHA)
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push events but only for the main branch
   pull_request:
-    branches:
-      - "main"
+    branches: [main]
     paths-ignore:
       - "**/README.md"
       - "**/samples/*"
-  # Allows you to run this workflow manually from the Actions tab
+
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  main:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
           fetch-depth: "0"
@@ -42,5 +33,55 @@ jobs:
 
       - name: Publish the package to nuget.org
         run: dotnet nuget push ./src/Mellon.MultiTenant/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
+  azure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore ./src/Mellon.MultiTenant.Azure/Mellon.MultiTenant.Azure.csproj
+
+      - name: Build
+        run: dotnet build ./src/Mellon.MultiTenant.Azure/Mellon.MultiTenant.Azure.csproj --no-restore
+
+      - name: Create the package
+        run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.Azure/Mellon.MultiTenant.Azure.csproj -p:Version=1.0.${{ github.run_number }}-alpha
+
+      - name: Publish the package to nuget.org
+        run: dotnet nuget push ./src/Mellon.MultiTenant.Azure/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
+  config-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore ./src/Mellon.MultiTenant.ConfigServer/Mellon.MultiTenant.ConfigServer.csproj
+
+      - name: Build
+        run: dotnet build ./src/Mellon.MultiTenant.ConfigServer/Mellon.MultiTenant.ConfigServer.csproj --no-restore
+
+      - name: Create the package
+        run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.ConfigServer/Mellon.MultiTenant.ConfigServer.csproj -p:Version=1.0.${{ github.run_number }}-alpha
+
+      - name: Publish the package to nuget.org
+        run: dotnet nuget push ./src/Mellon.MultiTenant.ConfigServer/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}

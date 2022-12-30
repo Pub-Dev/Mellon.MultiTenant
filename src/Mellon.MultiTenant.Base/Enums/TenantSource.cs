@@ -1,4 +1,4 @@
-﻿namespace Mellon.MultiTenant.Enums;
+﻿namespace Mellon.MultiTenant.Base.Enums;
 
 public enum TenantSource
 {

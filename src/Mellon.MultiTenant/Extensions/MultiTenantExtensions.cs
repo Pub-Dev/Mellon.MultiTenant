@@ -1,4 +1,6 @@
-﻿using Mellon.MultiTenant.Interfaces;
+﻿using Mellon.MultiTenant.Base;
+using Mellon.MultiTenant.Base.Interfaces;
+using Mellon.MultiTenant.Interfaces;
 using Mellon.MultiTenant.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -22,6 +24,8 @@ public static class MultiTenantExtensions
 
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
+            var multiTenantSource = serviceProvider.GetRequiredService<IMultiTenantSource>();
+
             var multiTenantOptions = serviceProvider.GetRequiredService<MultiTenantOptions>();
 
             var tenants = multiTenantSettings.LoadTenants(multiTenantOptions, configuration);
@@ -35,7 +39,11 @@ public static class MultiTenantExtensions
             {
                 multiTenantSettings.LoadConfiguration(
                     tenant,
-                    multiTenantSettings.BuildTenantConfiguration(hostEnvironment, multiTenantOptions, tenant));
+                    multiTenantSettings.BuildTenantConfiguration(
+                        hostEnvironment,
+                        multiTenantSource,
+                        multiTenantOptions,
+                        tenant));
             }
 
             return multiTenantSettings;
@@ -51,6 +59,8 @@ public static class MultiTenantExtensions
         });
 
         services.AddScoped<TenantSettings>();
+
+        services.AddSingleton<IMultiTenantSource, LocalMultiTenantSource>();
 
         services.AddScoped<IMultiTenantConfiguration, TenantConfiguration>();
 
@@ -91,9 +101,10 @@ public static class MultiTenantExtensions
     private static IEndpointRouteBuilder AddRefreshEndpoint(this IEndpointRouteBuilder routeBuilder)
     {
         routeBuilder.Map("refresh-settings", (
-                string? tenantName,
+                string tenantName,
                 IConfiguration configuration,
                 IHostEnvironment hostEnvironment,
+                IMultiTenantSource multiTenantSource,
                 MultiTenantOptions multiTenantOptions,
                 MultiTenantSettings multiTenantSettings) =>
         {
@@ -124,7 +135,11 @@ public static class MultiTenantExtensions
                     {
                         multiTenantSettings.LoadConfiguration(
                             tenant,
-                            multiTenantSettings.BuildTenantConfiguration(hostEnvironment, multiTenantOptions, tenant));
+                            multiTenantSettings.BuildTenantConfiguration(
+                                hostEnvironment,
+                                multiTenantSource,
+                                multiTenantOptions,
+                                tenant));
                     }
                 }
             }
