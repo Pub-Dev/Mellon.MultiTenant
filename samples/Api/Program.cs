@@ -1,4 +1,4 @@
-﻿using Mellon.MultiTenant;
+﻿using Mellon.MultiTenant.Base;
 using Mellon.MultiTenant.Extensions;
 using Mellon.MultiTenant.Interfaces;
 using Microsoft.AspNetCore.Http.Json;
@@ -11,7 +11,8 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-builder.Services.AddMultiTenant();
+builder.Services
+    .AddMultiTenant();
 
 var app = builder.Build();
 
@@ -19,7 +20,7 @@ app.UseMultiTenant();
 
 app.MapGet("/full", (IMultiTenantConfiguration configuration) =>
 {
-    return (((Mellon.MultiTenant.TenantConfiguration)configuration).Configuration as IConfigurationRoot).GetDebugView();
+    return (((Mellon.MultiTenant.Base.TenantConfiguration)configuration).Configuration as IConfigurationRoot).GetDebugView();
 });
 
 app.MapGet("/", (

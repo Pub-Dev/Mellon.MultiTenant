@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 
-namespace Mellon.MultiTenant;
+namespace Mellon.MultiTenant.Base;
 
 public class TenantSettings
 {
