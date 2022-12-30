@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Mellon.MultiTenant.Base;
 
-public class TenantSettings2
+public class TenantSettings
 {
     private readonly MultiTenantSettings _multiTenantSettings;
 
