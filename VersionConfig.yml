@@ -1,7 +1,8 @@
 branches:
   main:
     regex: ^master$|^main$
-    mode: ContinuousDelivery    
+    mode: ContinuousDelivery
+    label: ''
     increment: Patch
     prevent-increment-of-merged-branch-version: true
     track-merge-target: false
@@ -13,12 +14,14 @@ branches:
   feature:
     regex: ^features?[/-]
     mode: ContinuousDelivery
+    label: '{BranchName}'
     increment: Inherit
     source-branches: [ 'develop', 'main', 'release', 'feature', 'support', 'hotfix' ]
     pre-release-weight: 30000
   pull-request:
     regex: ^(pull|pull\-requests|pr)[/-]
     mode: ContinuousDelivery
+    label: PullRequest
     increment: Inherit
     label-number-pattern: '[/-](?<number>\d+)[-/]'
     source-branches: [ 'develop', 'main', 'release', 'feature', 'support', 'hotfix' ]
@@ -26,6 +29,7 @@ branches:
   hotfix:
     regex: ^hotfix(es)?[/-]
     mode: ContinuousDelivery
+    label: beta
     increment: Inherit
     source-branches: [ 'release', 'main', 'support', 'hotfix' ]
     pre-release-weight: 30000  
