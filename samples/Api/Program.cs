@@ -1,23 +1,15 @@
-﻿using Mellon.MultiTenant;
-using Mellon.MultiTenant.Base;
+﻿using Mellon.MultiTenant.Base;
 using Mellon.MultiTenant.Extensions;
 using Mellon.MultiTenant.Interfaces;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
 using WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<JsonOptions>(options =>
-{
-    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
-
-builder.Services.AddMultiTenant(x => x.WithCustonTenantConfigurationSource<LocalTenantSource>());
+builder.Services.AddMultiTenant();
 
 builder.Services.AddDbContext<DataBaseContext>(
-    (serviceProvider, options) =>
+    (IServiceProvider serviceProvider, DbContextOptionsBuilder options) =>
     {
         var configuration = serviceProvider.GetRequiredService<IMultiTenantConfiguration>();
 

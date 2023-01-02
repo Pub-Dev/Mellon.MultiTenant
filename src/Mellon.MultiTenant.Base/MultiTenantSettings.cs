@@ -34,7 +34,7 @@ public class MultiTenantSettings
             case TenantSource.EnvironmentVariables:
                 return configuration["MULTITENANT_TENANTS"].Split(',', StringSplitOptions.RemoveEmptyEntries);
 
-            case TenantSource.AppSettings:
+            case TenantSource.Settings:
                 return configuration.GetSection("MultiTenant:Tenants").Get<string[]>();
 
             default:
