@@ -3,12 +3,12 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>		
+		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\Mellon.MultiTenant\Mellon.MultiTenant.csproj" />
+		<ProjectReference Include="..\..\src\Mellon.MultiTenant.Azure\Mellon.MultiTenant.Azure.csproj" />
+		<ProjectReference Include="..\..\src\Mellon.MultiTenant.ConfigServer\Mellon.MultiTenant.ConfigServer.csproj" />
+		<ProjectReference Include="..\..\src\Mellon.MultiTenant\Mellon.MultiTenant.csproj" />
 	</ItemGroup>
-
-
 </Project>

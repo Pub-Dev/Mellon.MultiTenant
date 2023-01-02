@@ -3,8 +3,8 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Title>Mellon - MultiTenant</Title>
-		<PackageId>Mellon-MultiTenant</PackageId>
+		<Title>Mellon - MultiTenant ConfigServer</Title>
+		<PackageId>Mellon-MultiTenant-ConfigServer</PackageId>
 		<Authors>1berto and Naga</Authors>
 		<Company>PubDev</Company>
 		<Description>A Package to create Multi-Tenant Applications using NET</Description>
@@ -21,12 +21,14 @@
 		<None Include="..\..\readme.md" Pack="true" PackagePath="\" />
 		<None Include="..\..\logo.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
-
+	
 	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="3.2.1" />
+		<PackageReference Include="Steeltoe.Extensions.Configuration.PlaceholderCore" Version="3.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Mellon.MultiTenant.Base\Mellon.MultiTenant.Base.csproj" />
-	</ItemGroup>
+	</ItemGroup>	
+
 </Project>
