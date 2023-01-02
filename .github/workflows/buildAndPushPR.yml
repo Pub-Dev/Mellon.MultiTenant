@@ -1,4 +1,4 @@
-name: Build, Pack and Publish (ALPHA)
+name: Build, Pack and Publish ALPHA
 
 on:
   pull_request:
@@ -17,10 +17,15 @@ jobs:
         with:
           fetch-depth: "0"
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.7
         with:
-          versionSpec: "6.x"
+          versionSpec: "6.0.0-alpha.1"
           includePrerelease: true
 
       - name: Determine Version
@@ -32,11 +37,6 @@ jobs:
           echo "Major: ${{ steps.gitversion.outputs.major }}"
           echo "Minor: ${{ steps.gitversion.outputs.minor }}"
           echo "Patch: ${{ steps.gitversion.outputs.patch }}"
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
 
       - name: Restore dependencies
         run: dotnet restore ./src/Mellon.MultiTenant/Mellon.MultiTenant.csproj
