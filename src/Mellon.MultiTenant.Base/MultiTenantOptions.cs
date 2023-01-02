@@ -6,7 +6,7 @@ namespace Mellon.MultiTenant.Base;
 
 public class MultiTenantOptions
 {
-    public TenantSource TenantSource { get; set; } = TenantSource.AppSettings;
+    public TenantSource TenantSource { get; set; } = TenantSource.Settings;
 
     public string ApplicationName { get; set; }
 
@@ -22,15 +22,17 @@ public class MultiTenantOptions
 
     public Type CustomMultiTenantConfigurationSource { get; private set; }
 
-    public MultiTenantOptions LoadFromAppSettings()
+    public MultiTenantOptions LoadFromSettings()
     {
-        TenantSource = TenantSource.AppSettings;
+        TenantSource = TenantSource.Settings;
+
         return this;
     }
 
     public MultiTenantOptions LoadFromEnvironmentVariable()
     {
         TenantSource = TenantSource.EnvironmentVariables;
+
         return this;
     }
 
