@@ -1,10 +1,17 @@
 next-version: 1.0.0
 mode: Mainline
 branches:
-  main:
-    regex: main
+  master:
+    regex: (^main$)
     tag: ""
     increment: Patch
-    prevent-increment-of-merged-branch-version: true
-    track-merge-target: false
-    tracks-release-branches: false
+    is-release-branch: true
+  feature:
+    regex: ^feature?[/-]
+    tag: useBranchName
+    increment: Minor
+  bugfix:
+    regex: ^hotfix[/-]
+    tag: useBranchName
+    increment: Patch
+    source-branches: ["main"]
