@@ -52,7 +52,7 @@ There are two ways to configure the settings, via config and through the api
     "HttpHeaderKey": "x-tenant-name",
     "CookieKey": "tenant-name",
     "QueryStringKey": "tenant-name",
-    "TenantSource": "AppSettings",
+    "TenantSource": "Settings",
     "Tenants": [
       "client-a",
       "client-b",
@@ -64,9 +64,9 @@ There are two ways to configure the settings, via config and through the api
 |     Property      |                                                                        Description                                                                         |             Default              |
 | :---------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------: |
 |  ApplicationName  |                                                                      Application name                                                                      | IHostEnvironment.ApplicationName |
-|   HttpHeaderKey   |                                                   Http Header key, where the tenant name will be passed                                                    |              `null`              |
-|     CookieKey     |                                                   Http Cookie key, where the tenant name will be passed                                                    |              `null`              |
-|  QueryStringKey   |                                                Http Query String key, where the tenant name will be passed                                                 |              `null`              |
+|   HttpHeaderKey   |                                                   HTTP Header key, where the tenant name will be passed                                                    |              `null`              |
+|     CookieKey     |                                                   HTTP Cookie key, where the tenant name will be passed                                                    |              `null`              |
+|  QueryStringKey   |                                                HTTP Query String key, where the tenant name will be passed                                                 |              `null`              |
 |   TenantSource    |                    Where the list of possible tenants will be stored, it can be from two sources: `Settings` or `EnvironmentVariables`                     |            `Settings`            |
 |      Tenants      |                            When the property `TenantSource` is set to `Settings` this property must contain the list of tenants                            |              `null`              |
 | WithDefaultTenant | When the tenant is not defined by the caller the lib will set the tenant as the tenant defined within this property, use it just when actually needed 😉👍 |              `null`              |
@@ -82,7 +82,7 @@ $Env:MULTITENANT_TENANTS = 'client-a,client-b,client-c'
 
 You can also set the settings using these options while you are adding the services
 
-```csharp
+```CSharp
 builder.Services
         .AddMultiTenant(options =>
             options
@@ -101,19 +101,19 @@ builder.Services
 
 #### `WithHttpHeader(string)`
 
-- Set the Http Header key, where the tenant name will be passed
+- Set the HTTP Header key, where the tenant name will be passed
 
 #### `WithCookie(string)`
 
-- Set the Http Cookie key, where the tenant name will be passed
+- Set the HTTP Cookie key, where the tenant name will be passed
 
 #### `WithQueryString(string)`
 
-- Set the Http Query String key, where the tenant name will be passed
+- Set the HTTP Query String key, where the tenant name will be passed
 
 #### `WithDefaultTenant(string)`
 
-- Set for when the tenant is not defined by the caller the lib will set the tenant as the tenant defined within this property, use it just when actually needed 😉👍
+- Set for when the tenant is not defined by the caller the lib will set the tenant as the tenant defined within this property, use it just when needed 😉👍
 
 #### `LoadFromSettings`
 
@@ -125,13 +125,13 @@ builder.Services
 
 #### `WithHttpContextLoad(Func<HttpContext, string> func)`
 
-- When all the possibilities above does not meet with your need you can create a custom "Middleware" to idenfity the tenant based in a `HttpContext`
+- When all the possibilities above do not meet your need you can create a custom "Middleware" to identify the tenant based on a `HttpContext`
 
 #### `WithCustonTenantConfigurationSource<T>()`
 
-- `T` must be an implementation of the interface `ITenantConfigurationSourceWhen` use it to define new a source of configurations for the tenants, for example, if the tenant settings are stored on xml files you could create something like this:
+- `T` must be an implementation of the interface `ITenantConfigurationSourceWhen` use it to define new a source of configurations for the tenants, for example, if the tenant settings are stored on XML files you could create something like this:
 
-```csharp
+```CSharp
 public class LocalXmlTenantSource : ITenantConfigurationSource
 {
     private readonly IHostEnvironment _hostEnvironment;
@@ -161,7 +161,7 @@ This is the default source of settings for the tenants, there is no need to enab
 - `appsettings.{tenant}.json`
 - `appsettings.{_hostEnvironment.EnvironmentName}.json`
 
-Its also worth to mention that the configurations will also contain:
+It is also worth mentioning that the configurations will also contain:
 
 - `appsettings.json`
 - `appsettings.[environment].json`
@@ -185,7 +185,7 @@ With .NET CLI:
 dotnet add package Mellon-MultiTenant-ConfigServer
 ```
 
-Once the package is installed you need to condifigure it services
+Once the package is installed you need to configure its services
 
 ```csharp
 builder.Services
@@ -205,7 +205,7 @@ being:
 - _customer-api_ the application name
 - _client-a_ the tenant name
 
-More over its worthy to mention that the settings for each customer will also have the settings of the current files:
+Moreover, it is worth mentioning that the settings for each customer will also have the settings of the current files:
 
 - appsettings.json
 - appsettings.[environment].json
@@ -213,7 +213,7 @@ More over its worthy to mention that the settings for each customer will also ha
 
 ### Azure App Configuration
 
-You can also use as source of configuration **Azure App Configuration**
+You can also use it as a source of configuration the **Azure App Configuration**
 
 With package Manager:
 
@@ -227,9 +227,9 @@ With .NET CLI:
 dotnet add package Mellon-MultiTenant-Azure
 ```
 
-Once the package is installed you need to condifigure it services
+Once the package is installed you need to configure its services
 
-```csharp
+```CSharp
 builder.Services
         .AddMultiTenant()
         .AddMultiTenantAzureAppConfiguration();
@@ -237,12 +237,12 @@ builder.Services
 
 ### `AddMultiTenantAzureAppConfiguration(Action<AzureMultiTenantOptions> action = null)`
 
-if the action is not passed, the connection string used to connect on azure will loaded from `AzureAppConfigurationConnectionString`
+if the action is not passed, the connection string used to connect on azure will be loaded from `AzureAppConfigurationConnectionString`
 
-if you want to elaborate more, how you are going to connect on azure, you can use the `AzureMultiTenantOptions`, there is a property, which is a `Func<IServiceProvider, string, Action<AzureAppConfigurationOptions>>`, where the first parameter is the ServiceProvider, where you can extract the services; a string, being the tenant name; and the return of this `Func` must be an `Action<AzureAppConfigurationOptions>`.
+if you want to elaborate more, on how you are going to connect on Azure, you can use the `AzureMultiTenantOptions`, there is a property, which is a `Func<IServiceProvider, string, Action<AzureAppConfigurationOptions>>`, where the first parameter is the ServiceProvider, where you can extract the services; a string, being the tenant name; and the return of this `Func` must be an `Action<AzureAppConfigurationOptions>`.
 For example:
 
-```csharp
+```CSharp
 builder.Services
         .AddMultiTenant()
         .AddMultiTenantAzureAppConfiguration(options =>
@@ -259,27 +259,27 @@ builder.Services
 
 ## Usage / Samples
 
-You can find some examples of how to use this library on the folder `/samples`
+You can find some examples of how to use this library in the folder `/samples`
 
 ### Web API
 
 To enable it on your api you first need to add the services:
 
-```csharp
+```CSharp
 builder.Services.AddMultiTenant();
 ```
 
-then you need also to register the middleware used to identify the tenant based on the `HttpRequests`
+then you need also to register the middleware used to identify the tenant based on the `HttpContext`
 
 ```csharp
 app.UseMultiTenant();
 ```
 
-Once that is done you will be able to use the interface `IMultiTenantConfiguration`, this interface will bahave exactly as the `IConfiguration` interface, but containing only the current tenant settings:
+Once that is done you will be able to use the interface `IMultiTenantConfiguration`, this interface will behave the same as the `IConfiguration` interface, but contain only the current tenant settings:
 
 Example:
 
-```csharp
+```CSharp
 app.MapGet("/", (IMultiTenantConfiguration configuration) =>
 {
     return new
@@ -292,11 +292,11 @@ app.MapGet("/", (IMultiTenantConfiguration configuration) =>
 
 ### EF Core Migrations:
 
-To use it with EF Core is quite simple, you need to use the interface `IMultiTenantConfiguration` as mention above to setup your EF Context
+To use it with EF Core is quite simple, you need to use the interface `IMultiTenantConfiguration` as mentioned above to setup your EF Context
 
 #### Setup
 
-```csharp
+```CSharp
 builder.Services.AddDbContext<DataBaseContext>(
     (IServiceProvider serviceProvider, DbContextOptionsBuilder options) =>
     {
@@ -310,7 +310,7 @@ builder.Services.AddDbContext<DataBaseContext>(
 
 To apply the migrations, you only need to do this:
 
-```csharp
+```CSharp
 var tenants = app.Services.GetRequiredService<MultiTenantSettings>();
 
 foreach (var tenant in tenants.Tenants)
@@ -332,7 +332,7 @@ app.Run();
 
 ## Extras
 
-We know that settings can be changed all the time, but in order to get our applications running on with the latest settings we need to restart the application, it caused downtime and its not very practical. Keeping that in mind, we added also an endpoint that when called will refresh all the settings for the all the tenants or for a specific tenant:
+We know that settings can be changed all the time, but to get our applications running on with the latest settings we need to restart the application, it caused downtime and it's not very practical. Keeping that in mind, we added also an endpoint that when called will refresh all the settings for all the tenants or a specific tenant:
 
 - `/refresh-settings`
 - `/refresh-settings/{tenantName}`
