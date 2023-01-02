@@ -82,7 +82,7 @@ $Env:MULTITENANT_TENANTS = 'client-a,client-b,client-c'
 
 You can also set the settings using these options while you are adding the services
 
-```CSharp
+```csharp
 builder.Services
         .AddMultiTenant(options =>
             options
@@ -131,7 +131,7 @@ builder.Services
 
 - `T` must be an implementation of the interface `ITenantConfigurationSourceWhen` use it to define new a source of configurations for the tenants, for example, if the tenant settings are stored on XML files you could create something like this:
 
-```CSharp
+```csharp
 public class LocalXmlTenantSource : ITenantConfigurationSource
 {
     private readonly IHostEnvironment _hostEnvironment;
@@ -229,7 +229,7 @@ dotnet add package Mellon-MultiTenant-Azure
 
 Once the package is installed you need to configure its services
 
-```CSharp
+```csharp
 builder.Services
         .AddMultiTenant()
         .AddMultiTenantAzureAppConfiguration();
@@ -242,7 +242,7 @@ if the action is not passed, the connection string used to connect on azure will
 if you want to elaborate more, on how you are going to connect on Azure, you can use the `AzureMultiTenantOptions`, there is a property, which is a `Func<IServiceProvider, string, Action<AzureAppConfigurationOptions>>`, where the first parameter is the ServiceProvider, where you can extract the services; a string, being the tenant name; and the return of this `Func` must be an `Action<AzureAppConfigurationOptions>`.
 For example:
 
-```CSharp
+```csharp
 builder.Services
         .AddMultiTenant()
         .AddMultiTenantAzureAppConfiguration(options =>
@@ -265,7 +265,7 @@ You can find some examples of how to use this library in the folder `/samples`
 
 To enable it on your api you first need to add the services:
 
-```CSharp
+```csharp
 builder.Services.AddMultiTenant();
 ```
 
@@ -279,7 +279,7 @@ Once that is done you will be able to use the interface `IMultiTenantConfigurati
 
 Example:
 
-```CSharp
+```csharp
 app.MapGet("/", (IMultiTenantConfiguration configuration) =>
 {
     return new
@@ -296,7 +296,7 @@ To use it with EF Core is quite simple, you need to use the interface `IMultiTen
 
 #### Setup
 
-```CSharp
+```csharp
 builder.Services.AddDbContext<DataBaseContext>(
     (IServiceProvider serviceProvider, DbContextOptionsBuilder options) =>
     {
@@ -310,7 +310,7 @@ builder.Services.AddDbContext<DataBaseContext>(
 
 To apply the migrations, you only need to do this:
 
-```CSharp
+```csharp
 var tenants = app.Services.GetRequiredService<MultiTenantSettings>();
 
 foreach (var tenant in tenants.Tenants)
