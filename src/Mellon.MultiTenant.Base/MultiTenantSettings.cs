@@ -44,7 +44,7 @@ public class MultiTenantSettings
 
     public IConfigurationRoot BuildTenantConfiguration(
         IHostEnvironment hostEnvironment,
-        ITenantConfigurationSource multiTenantSource,
+        ITenantConfigurationSource tenantConfigurationSource,
         MultiTenantOptions multiTenantOptions,
         string tenant)
     {
@@ -53,7 +53,7 @@ public class MultiTenantSettings
             .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true)
             .AddEnvironmentVariables();
 
-        builder = multiTenantSource.AddSource(tenant, builder);
+        builder = tenantConfigurationSource.AddSource(tenant, builder);
 
         return builder.Build();
     }

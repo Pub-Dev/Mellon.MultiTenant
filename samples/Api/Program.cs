@@ -1,11 +1,7 @@
-﻿using Mellon.MultiTenant;
-using Mellon.MultiTenant.Base;
+﻿using Mellon.MultiTenant.Base;
 using Mellon.MultiTenant.Extensions;
 using Mellon.MultiTenant.Interfaces;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-using System.Text.Json.Serialization;
 using WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
