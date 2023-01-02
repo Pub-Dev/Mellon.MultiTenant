@@ -1,4 +1,4 @@
-name: Build, Pack and Publish (ALPHA)
+name: Build, Pack and Publish ALPHA
 
 on:
   pull_request:
