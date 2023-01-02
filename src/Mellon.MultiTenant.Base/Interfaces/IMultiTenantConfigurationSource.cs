@@ -2,7 +2,7 @@
 
 namespace Mellon.MultiTenant.Base.Interfaces;
 
-public interface IMultiTenantSource
+public interface ITenantConfigurationSource
 {
     IConfigurationBuilder AddSource(string tenant, IConfigurationBuilder builder);
 }

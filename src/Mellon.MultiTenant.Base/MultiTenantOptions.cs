@@ -1,4 +1,5 @@
 using Mellon.MultiTenant.Base.Enums;
+using Mellon.MultiTenant.Base.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace Mellon.MultiTenant.Base;
@@ -18,6 +19,8 @@ public class MultiTenantOptions
     public string DefaultTenant { get; set; }
 
     public Func<HttpContext, string> GetTenantFromHttClientFunc { get; private set; }
+
+    public Type CustomMultiTenantConfigurationSource { get; private set; }
 
     public MultiTenantOptions LoadFromAppSettings()
     {
@@ -64,6 +67,13 @@ public class MultiTenantOptions
     public MultiTenantOptions WithDefaultTenant(string defaultTenant)
     {
         DefaultTenant = defaultTenant;
+        return this;
+    }
+
+    public MultiTenantOptions WithCustonTenantConfigurationSource<T>() where T: ITenantConfigurationSource
+    {
+        CustomMultiTenantConfigurationSource = typeof(T);
+
         return this;
     }
 }

@@ -25,15 +25,12 @@ jobs:
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.7
         with:
-          versionSpec: '6.0.0-alpha.1'
+          versionSpec: "6.0.0-alpha.1"
           includePrerelease: true
 
       - name: Determine Version
         id: gitversion
         uses: gittools/actions/gitversion/execute@v0.9.7
-        with:
-          useConfigFile: true
-          configFilePath: VersionConfig.yml
 
       - name: Display GitVersion outputs
         run: |

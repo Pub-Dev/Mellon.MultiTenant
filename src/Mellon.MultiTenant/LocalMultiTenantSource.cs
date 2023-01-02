@@ -4,11 +4,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace Mellon.MultiTenant
 {
-    public class LocalMultiTenantSource : IMultiTenantSource
+    public class LocalTenantSource : ITenantConfigurationSource
     {
         private readonly IHostEnvironment _hostEnvironment;
 
-        public LocalMultiTenantSource(
+        public LocalTenantSource(
             IHostEnvironment hostEnvironment)
         {
             _hostEnvironment = hostEnvironment;
