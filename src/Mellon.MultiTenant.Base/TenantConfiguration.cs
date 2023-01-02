@@ -11,10 +11,11 @@ public class TenantConfiguration : IMultiTenantConfiguration
     public IConfiguration Configuration { get; }
 
     public TenantConfiguration(
-        TenantSettings tenantSettings)
+        TenantSettings tenantSettings,
+        IConfiguration configuration)
     {
         Tenant = tenantSettings.Tenant;
-        Configuration = tenantSettings.Configuration;
+        Configuration = tenantSettings.Configuration ?? configuration;
     }
 
     public string this[string key] { get => Configuration[key]; set => Configuration[key] = value; }

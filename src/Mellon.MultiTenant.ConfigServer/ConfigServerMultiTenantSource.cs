@@ -7,12 +7,12 @@ using Steeltoe.Extensions.Configuration.Placeholder;
 
 namespace Mellon.MultiTenant.ConfigServer
 {
-    public class ConfigServerMultiTenantSource : IMultiTenantSource
+    public class ConfigServerTenantSource : ITenantConfigurationSource
     {
         private readonly MultiTenantOptions _multiTenantOptions;
         private readonly IHostEnvironment _hostEnvironment;
 
-        public ConfigServerMultiTenantSource(
+        public ConfigServerTenantSource(
             MultiTenantOptions multiTenantOptions,
             IHostEnvironment hostEnvironment)
         {
