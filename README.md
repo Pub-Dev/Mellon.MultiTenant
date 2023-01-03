@@ -127,7 +127,7 @@ builder.Services
 
 - When all the possibilities above do not meet your need you can create a custom "Middleware" to identify the tenant based on a `HttpContext`
 
-#### `WithCustonTenantConfigurationSource<T>()`
+#### `WithCustomTenantConfigurationSource<T>()`
 
 - `T` must be an implementation of the interface `ITenantConfigurationSourceWhen` use it to define new a source of configurations for the tenants, for example, if the tenant settings are stored on XML files you could create something like this:
 
