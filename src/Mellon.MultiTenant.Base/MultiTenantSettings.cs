@@ -34,7 +34,7 @@ public class MultiTenantSettings
             case TenantSource.EnvironmentVariables:
                 return configuration["MULTITENANT_TENANTS"].Split(',', StringSplitOptions.RemoveEmptyEntries);
 
-            case TenantSource.AppSettings:
+            case TenantSource.Settings:
                 return configuration.GetSection("MultiTenant:Tenants").Get<string[]>();
 
             default:
@@ -44,7 +44,7 @@ public class MultiTenantSettings
 
     public IConfigurationRoot BuildTenantConfiguration(
         IHostEnvironment hostEnvironment,
-        IMultiTenantSource multiTenantSource,
+        ITenantConfigurationSource tenantConfigurationSource,
         MultiTenantOptions multiTenantOptions,
         string tenant)
     {
@@ -53,7 +53,7 @@ public class MultiTenantSettings
             .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true)
             .AddEnvironmentVariables();
 
-        builder = multiTenantSource.AddSource(tenant, builder);
+        builder = tenantConfigurationSource.AddSource(tenant, builder);
 
         return builder.Build();
     }

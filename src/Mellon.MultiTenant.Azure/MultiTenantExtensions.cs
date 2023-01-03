@@ -10,7 +10,7 @@ namespace Mellon.MultiTenant.Extensions
     {
         public static IServiceCollection AddMultiTenantAzureAppConfiguration(
             this IServiceCollection services,
-            Action<AzureMultiTenantOptions> action)
+            Action<AzureMultiTenantOptions> action = null)
         {
             services.AddSingleton<AzureMultiTenantOptions>(serviceProvider =>
             {
@@ -25,14 +25,11 @@ namespace Mellon.MultiTenant.Extensions
                 return azureMultiTenantOptions;
             });
 
-            services.RemoveAll<IMultiTenantSource>();
+            services.RemoveAll<ITenantConfigurationSource>();
 
-            services.AddSingleton<IMultiTenantSource, AzureMultiTenantSource>();
+            services.AddSingleton<ITenantConfigurationSource, AzureTenantSource>();
 
             return services;
         }
-
-        public static IServiceCollection AddMultiTenantAzureAppConfiguration(
-            this IServiceCollection services) => services.AddMultiTenantAzureAppConfiguration(null);
     }
 }

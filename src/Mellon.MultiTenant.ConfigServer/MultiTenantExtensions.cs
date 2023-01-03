@@ -10,9 +10,9 @@ namespace Mellon.MultiTenant.Extensions
         public static IServiceCollection AddMultiTenantSpringCloudConfig(
             this IServiceCollection services)
         {
-            services.RemoveAll<IMultiTenantSource>();
+            services.RemoveAll<ITenantConfigurationSource>();
 
-            services.AddSingleton<IMultiTenantSource, ConfigServerMultiTenantSource>();
+            services.AddSingleton<ITenantConfigurationSource, ConfigServerTenantSource>();
 
             return services;
         }

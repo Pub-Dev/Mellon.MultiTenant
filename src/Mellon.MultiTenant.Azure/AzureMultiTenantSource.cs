@@ -3,12 +3,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace Mellon.MultiTenant.Azure
 {
-    public class AzureMultiTenantSource : IMultiTenantSource
+    public class AzureTenantSource : ITenantConfigurationSource
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly AzureMultiTenantOptions _azureMultiTenantOptions;
 
-        public AzureMultiTenantSource(
+        public AzureTenantSource(
             IServiceProvider serviceProvider,
             AzureMultiTenantOptions azureMultiTenantOptions)
         {
