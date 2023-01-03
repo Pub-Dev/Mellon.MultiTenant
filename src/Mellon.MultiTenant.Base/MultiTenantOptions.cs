@@ -72,7 +72,7 @@ public class MultiTenantOptions
         return this;
     }
 
-    public MultiTenantOptions WithCustonTenantConfigurationSource<T>() where T: ITenantConfigurationSource
+    public MultiTenantOptions WithCustomTenantConfigurationSource<T>() where T: ITenantConfigurationSource
     {
         CustomMultiTenantConfigurationSource = typeof(T);
 
