@@ -8,7 +8,7 @@
 | **Mellon-MultiTenant-ConfigServer** | [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant-ConfigServer)](https://www.nuget.org/packages/Mellon-MultiTenant-ConfigServer) | [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant-ConfigServer)](https://www.nuget.org/packages/Mellon-MultiTenant-ConfigServer) |
 |    **Mellon-MultiTenant-Azure**     |        [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant-Azure)](https://www.nuget.org/packages/Mellon-MultiTenant-Azure)        |        [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant-Azure)](https://www.nuget.org/packages/Mellon-MultiTenant-Azure)        |
 
-[![GitHublicense](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/1bberto/Mellon.MultiTenant/main/LICENSE) [![CI](https://github.com/1bberto/Mellon.MultiTenant/actions/workflows/buildAndPush.yml/badge.svg?branch=main)](https://github.com/1bberto/Mellon.MultiTenant/actions/workflows/buildAndPush.yml)
+[![GitHublicense](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/1bberto/Mellon.MultiTenant/main/LICENSE) [![CI](https://github.com/Pub-Dev/Mellon.MultiTenant/actions/workflows/buildAndPush.yml/badge.svg?branch=main)](https://github.com/Pub-Dev/Mellon.MultiTenant/actions/workflows/buildAndPush.yml)
 
 Why Mellon, mellon is the Sindarin (and Noldorin) word for "friend", yes I'm a big fan of LoR, so let's be friends?
 
@@ -346,7 +346,7 @@ PS: this will work only with AzureAppConfiguration and SpringCloudConfig
 - Load the Tenants from a web-api request
 - Enable the usage with HanfFire
 
-See the [open issues](https://github.com/1bberto/Mellon.MultiTenant/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/Pub-Dev/Mellon.MultiTenant/issues) for a full list of proposed features (and known issues).
 
 ## Contributing
 
@@ -366,16 +366,16 @@ Don't forget to give the project a star! Thanks again!
 - Humberto Rodrigues - [@1bberto](https://instagram.com/1bberto) - humberto_henrique1@live.com
 - Rafael Nagai - [@naganaga](https://instagram.com/rafakenji23) - rafakenji23@gmail.com
 
-Project Link: [https://github.com/1bberto/Mellon.MultiTenant](https://github.com/1bberto/Mellon.MultiTenant)
+Project Page: [https://pub-dev.github.io/Mellon.MultiTenant](https://pub-dev.github.io/Mellon.MultiTenant)
 
 [contributors-shield]: https://img.shields.io/github/contributors/1bberto/Mellon.MultiTenant.svg?style=for-the-badge
-[contributors-url]: https://github.com/1bberto/Mellon.MultiTenant/graphs/contributors
+[contributors-url]: https://github.com/Pub-Dev/Mellon.MultiTenant/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/1bberto/Mellon.MultiTenant.svg?style=for-the-badge
-[forks-url]: https://github.com/1bberto/Mellon.MultiTenant/network/members
+[forks-url]: https://github.com/Pub-Dev/Mellon.MultiTenant/network/members
 [stars-shield]: https://img.shields.io/github/stars/1bberto/Mellon.MultiTenant.svg?style=for-the-badge
-[stars-url]: https://github.com/1bberto/Mellon.MultiTenant/stargazers
+[stars-url]: https://github.com/Pub-Dev/Mellon.MultiTenant/stargazers
 [issues-shield]: https://img.shields.io/github/issues/1bberto/Mellon.MultiTenant.svg?style=for-the-badge
-[issues-url]: https://github.com/1bberto/Mellon.MultiTenant/issues
+[issues-url]: https://github.com/Pub-Dev/Mellon.MultiTenant/issues
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/humbberto
 [linkedin2-url]: https://br.linkedin.com/in/rafakenji
