@@ -129,7 +129,7 @@ builder.Services
 
 #### `WithCustomTenantConfigurationSource<T>()`
 
-- `T` must be an implementation of the interface `ITenantConfigurationSourceWhen` use it to define new a source of configurations for the tenants, for example, if the tenant settings are stored on XML files you could create something like this:
+- `T` must be an implementation of the interface `ITenantConfigurationSource` use it to define new a source of configurations for the tenants, for example, if the tenant settings are stored on XML files you could create something like this:
 
 ```csharp
 public class LocalXmlTenantSource : ITenantConfigurationSource
@@ -147,7 +147,7 @@ public class LocalXmlTenantSource : ITenantConfigurationSource
         IConfigurationBuilder builder)
     {
         builder.AddXmlFile($"appsettings.{tenant}.xml", true);
-        builder.AddJsonFile($"appsettings.{tenant}.{_hostEnvironment.EnvironmentName}.xml", true);
+        builder.AddXmlFile($"appsettings.{tenant}.{_hostEnvironment.EnvironmentName}.xml", true);
 
         return builder;
     }
