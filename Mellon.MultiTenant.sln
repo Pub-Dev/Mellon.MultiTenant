@@ -22,7 +22,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mellon.MultiTenant.Azure", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mellon.MultiTenant.Base", "src\Mellon.MultiTenant.Base\Mellon.MultiTenant.Base.csproj", "{B4CF07E7-7DAC-47E9-A9F3-4244F772096F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mellon.MultiTenant.ConfigServer", "src\Mellon.MultiTenant.ConfigServer\Mellon.MultiTenant.ConfigServer.csproj", "{9A1BA7B3-63BD-4E64-A8A7-321F0AFA0F5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mellon.MultiTenant.ConfigServer", "src\Mellon.MultiTenant.ConfigServer\Mellon.MultiTenant.ConfigServer.csproj", "{9A1BA7B3-63BD-4E64-A8A7-321F0AFA0F5C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiHangfire", "samples\Hangfire\WebApiHangfire.csproj", "{BBF26975-DFDF-4379-9778-0C6A7582A8D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mellon.MultiTenant.Hangfire", "src\Mellon.MultiTenant.HangFire\Mellon.MultiTenant.Hangfire.csproj", "{A62FA3DB-D0E9-4A94-8FAC-EAE53FD6F696}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +54,14 @@ Global
 		{9A1BA7B3-63BD-4E64-A8A7-321F0AFA0F5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A1BA7B3-63BD-4E64-A8A7-321F0AFA0F5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A1BA7B3-63BD-4E64-A8A7-321F0AFA0F5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBF26975-DFDF-4379-9778-0C6A7582A8D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBF26975-DFDF-4379-9778-0C6A7582A8D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBF26975-DFDF-4379-9778-0C6A7582A8D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBF26975-DFDF-4379-9778-0C6A7582A8D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A62FA3DB-D0E9-4A94-8FAC-EAE53FD6F696}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A62FA3DB-D0E9-4A94-8FAC-EAE53FD6F696}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A62FA3DB-D0E9-4A94-8FAC-EAE53FD6F696}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A62FA3DB-D0E9-4A94-8FAC-EAE53FD6F696}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +72,8 @@ Global
 		{7E18D01E-7DFD-4A66-B574-60AB2BF027EB} = {722E9D04-F483-4F6D-B00F-4584C2ECF279}
 		{B4CF07E7-7DAC-47E9-A9F3-4244F772096F} = {722E9D04-F483-4F6D-B00F-4584C2ECF279}
 		{9A1BA7B3-63BD-4E64-A8A7-321F0AFA0F5C} = {722E9D04-F483-4F6D-B00F-4584C2ECF279}
+		{BBF26975-DFDF-4379-9778-0C6A7582A8D2} = {830B13DC-E58B-47BC-AF46-202841AF1B3A}
+		{A62FA3DB-D0E9-4A94-8FAC-EAE53FD6F696} = {722E9D04-F483-4F6D-B00F-4584C2ECF279}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {12CA4757-DB3B-48BB-AE88-B68805FE0479}

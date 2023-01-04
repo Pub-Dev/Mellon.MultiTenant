@@ -7,7 +7,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MULTITENANT_TENANTS": "client-a,client-b,client-c"
       },
-      "applicationUrl": "https://localhost:63474;http://localhost:63475"
+      "applicationUrl": "https://localhost:63474"
     }
   }
 }

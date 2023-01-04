@@ -9,7 +9,7 @@
 		<Company>PubDev</Company>
 		<Description>A Package to create Multi-Tenant Applications using NET</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageProjectUrl>https://1bberto.github.io/Mellon.MultiTenant/</PackageProjectUrl>
+		<PackageProjectUrl>https://pub-dev.github.io/Mellon.MultiTenant/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/1bberto/Mellon.MultiTenant</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>

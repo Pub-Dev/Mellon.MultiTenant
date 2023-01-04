@@ -5,10 +5,12 @@
 |               Package               |                                                                  Version                                                                   |                                                                     Alpha                                                                     |
 | :---------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------: |
 |       **Mellon-MultiTenant**        |              [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant)](https://www.nuget.org/packages/Mellon-MultiTenant)              |              [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant)](https://www.nuget.org/packages/Mellon-MultiTenant)              |
+|     **Mellon-MultiTenant-Base**     |         [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant-Base)](https://www.nuget.org/packages/Mellon-MultiTenant-Base)         |         [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant-Base)](https://www.nuget.org/packages/Mellon-MultiTenant-Base)         |
 | **Mellon-MultiTenant-ConfigServer** | [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant-ConfigServer)](https://www.nuget.org/packages/Mellon-MultiTenant-ConfigServer) | [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant-ConfigServer)](https://www.nuget.org/packages/Mellon-MultiTenant-ConfigServer) |
 |    **Mellon-MultiTenant-Azure**     |        [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant-Azure)](https://www.nuget.org/packages/Mellon-MultiTenant-Azure)        |        [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant-Azure)](https://www.nuget.org/packages/Mellon-MultiTenant-Azure)        |
+|   **Mellon-MultiTenant-Hangfire**   |     [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant-Hangfire)](https://www.nuget.org/packages/Mellon-MultiTenant-Hangfire)     |     [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant-Hangfire)](https://www.nuget.org/packages/Mellon-MultiTenant-Hangfire)     |
 
-[![GitHublicense](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/1bberto/Mellon.MultiTenant/main/LICENSE) [![CI](https://github.com/Pub-Dev/Mellon.MultiTenant/actions/workflows/buildAndPush.yml/badge.svg?branch=main)](https://github.com/Pub-Dev/Mellon.MultiTenant/actions/workflows/buildAndPush.yml)
+![Downloads](https://img.shields.io/nuget/dt/Mellon-MultiTenant.svg 'Downloads') [![GitHublicense](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/1bberto/Mellon.MultiTenant/main/LICENSE) [![CI](https://github.com/Pub-Dev/Mellon.MultiTenant/actions/workflows/buildAndPush.yml/badge.svg?branch=main)](https://github.com/Pub-Dev/Mellon.MultiTenant/actions/workflows/buildAndPush.yml)
 
 Why Mellon, mellon is the Sindarin (and Noldorin) word for "friend", yes I'm a big fan of LoR, so let's be friends?
 
@@ -91,7 +93,7 @@ builder.Services
                 .WithCookie("tenant-name")
                 .WithQueryString("tenant-name")
                 .WithDefaultTenant("client-a")
-                .LoadFromAppSettings()
+                .LoadFromSettings()
         );
 ```
 
@@ -339,12 +341,16 @@ We know that settings can be changed all the time, but to get our applications r
 
 PS: this will work only with AzureAppConfiguration and SpringCloudConfig
 
+## Hangfire
+
+[WIP] 🔥
+
 ## Roadmap
 
 - Add unit tests 🧪
 - Add new Config Source
 - Load the Tenants from a web-api request
-- Enable the usage with HanfFire
+- Enable the usage with HangFire [WIP] 🔥
 
 See the [open issues](https://github.com/Pub-Dev/Mellon.MultiTenant/issues) for a full list of proposed features (and known issues).
 

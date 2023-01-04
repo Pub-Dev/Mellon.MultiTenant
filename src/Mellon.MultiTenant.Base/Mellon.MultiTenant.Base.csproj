@@ -3,7 +3,24 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<Title>Mellon - MultiTenant Base</Title>
+		<PackageId>Mellon-MultiTenant-Base</PackageId>
+		<Authors>1berto and Naga</Authors>
+		<Company>PubDev</Company>
+		<Description>A Package to create Multi-Tenant Applications using NET</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://pub-dev.github.io/Mellon.MultiTenant/</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/1bberto/Mellon.MultiTenant</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageIcon>logo.png</PackageIcon>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\readme.md" Pack="true" PackagePath="\" />
+		<None Include="..\..\logo.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -12,6 +29,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+		<PackageReference Include="Scrutor.AspNetCore" Version="3.3.0" />
 	</ItemGroup>
 
 </Project>
