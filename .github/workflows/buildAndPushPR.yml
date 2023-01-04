@@ -38,116 +38,72 @@ jobs:
           echo "Minor: ${{ steps.gitversion.outputs.minor }}"
           echo "Patch: ${{ steps.gitversion.outputs.patch }}"
 
-      - name: Restore dependencies
+      - name: Main Restore dependencies
         run: dotnet restore ./src/Mellon.MultiTenant/Mellon.MultiTenant.csproj
 
-      - name: Build
+      - name: Main Build
         run: dotnet build ./src/Mellon.MultiTenant/Mellon.MultiTenant.csproj --no-restore
 
-      - name: Create the package
+      - name: Main Create the package
         run: dotnet pack --configuration Release ./src/Mellon.MultiTenant/Mellon.MultiTenant.csproj -p:Version=1.0.${{ github.run_number }}-alpha
 
-      - name: Publish the package to nuget.org
+      - name: Main Publish the package to nuget.org
         run: dotnet nuget push ./src/Mellon.MultiTenant/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
-  azure:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: "0"
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
-
-      - name: Restore dependencies
+      - name: Azure Restore dependencies
         run: dotnet restore ./src/Mellon.MultiTenant.Azure/Mellon.MultiTenant.Azure.csproj
 
-      - name: Build
+      - name: Azure Build
         run: dotnet build ./src/Mellon.MultiTenant.Azure/Mellon.MultiTenant.Azure.csproj --no-restore
 
-      - name: Create the package
+      - name: Azure Create the package
         run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.Azure/Mellon.MultiTenant.Azure.csproj -p:Version=1.0.${{ github.run_number }}-alpha
 
-      - name: Publish the package to nuget.org
+      - name: Azure Publish the package to nuget.org
         run: dotnet nuget push ./src/Mellon.MultiTenant.Azure/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
-  config-server:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: "0"
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
-
-      - name: Restore dependencies
+      - name: Config-Server Restore dependencies
         run: dotnet restore ./src/Mellon.MultiTenant.ConfigServer/Mellon.MultiTenant.ConfigServer.csproj
 
-      - name: Build
+      - name: Config-Server Build
         run: dotnet build ./src/Mellon.MultiTenant.ConfigServer/Mellon.MultiTenant.ConfigServer.csproj --no-restore
 
-      - name: Create the package
+      - name: Config-Server Create the package
         run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.ConfigServer/Mellon.MultiTenant.ConfigServer.csproj -p:Version=1.0.${{ github.run_number }}-alpha
 
-      - name: Publish the package to nuget.org
+      - name: Config-Server Publish the package to nuget.org
         run: dotnet nuget push ./src/Mellon.MultiTenant.ConfigServer/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
-  base:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: "0"
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
+      - name: Base Restore dependencies
+        run: dotnet restore ./src/Mellon.MultiTenant.Base/Mellon.MultiTenant.Base.csproj
 
-      - name: Restore dependencies
-        run: dotnet restore ./src/Mellon.MultiTenant.ConfigServer.Base/Mellon.MultiTenant.ConfigServer.Base.csproj
+      - name: Base Build
+        run: dotnet build ./src/Mellon.MultiTenant.Base/Mellon.MultiTenant.Base.csproj --no-restore
 
-      - name: Build
-        run: dotnet build ./src/Mellon.MultiTenant.ConfigServer.Base/Mellon.MultiTenant.ConfigServer.Base.csproj --no-restore
+      - name: Base Create the package
+        run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.Base/Mellon.MultiTenant.Base.csproj -p:Version=1.0.${{ github.run_number }}-alpha
 
-      - name: Create the package
-        run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.ConfigServer.Base/Mellon.MultiTenant.ConfigServer.Base.csproj -p:Version=1.0.${{ github.run_number }}-alpha
-
-      - name: Publish the package to nuget.org
-        run: dotnet nuget push ./src/Mellon.MultiTenant.ConfigServer.Base/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+      - name: Base Publish the package to nuget.org
+        run: dotnet nuget push ./src/Mellon.MultiTenant.Base/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
-  hangfire:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: "0"
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
+      - name: Hangfire Restore dependencies
+        run: dotnet restore ./src/Mellon.MultiTenant.Hangfire/Mellon.MultiTenant.Hangfire.csproj
 
-      - name: Restore dependencies
-        run: dotnet restore ./src/Mellon.MultiTenant.ConfigServer.Hangfire/Mellon.MultiTenant.ConfigServer.Hangfire.csproj
+      - name: Hangfire Build
+        run: dotnet build ./src/Mellon.MultiTenant.Hangfire/Mellon.MultiTenant.Hangfire.csproj --no-restore
 
-      - name: Build
-        run: dotnet build ./src/Mellon.MultiTenant.ConfigServer.Hangfire/Mellon.MultiTenant.ConfigServer.Hangfire.csproj --no-restore
+      - name: Hangfire Create the package
+        run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.Hangfire/Mellon.MultiTenant.Hangfire.csproj -p:Version=1.0.${{ github.run_number }}-alpha
 
-      - name: Create the package
-        run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.ConfigServer.Hangfire/Mellon.MultiTenant.ConfigServer.Hangfire.csproj -p:Version=1.0.${{ github.run_number }}-alpha
-
-      - name: Publish the package to nuget.org
-        run: dotnet nuget push ./src/Mellon.MultiTenant.ConfigServer.Hangfire/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+      - name: Hangfire Publish the package to nuget.org
+        run: dotnet nuget push ./src/Mellon.MultiTenant.Hangfire/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
