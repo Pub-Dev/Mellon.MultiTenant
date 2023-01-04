@@ -38,72 +38,180 @@ jobs:
           echo "Minor: ${{ steps.gitversion.outputs.minor }}"
           echo "Patch: ${{ steps.gitversion.outputs.patch }}"
 
-      - name: Main Restore dependencies
+      - name: Restore dependencies
         run: dotnet restore ./src/Mellon.MultiTenant/Mellon.MultiTenant.csproj
 
-      - name: Main Build
+      - name: Build
         run: dotnet build ./src/Mellon.MultiTenant/Mellon.MultiTenant.csproj --no-restore
 
-      - name: Main Create the package
+      - name: Create the package
         run: dotnet pack --configuration Release ./src/Mellon.MultiTenant/Mellon.MultiTenant.csproj -p:Version=1.0.${{ github.run_number }}-alpha
 
-      - name: Main Publish the package to nuget.org
+      - name: Publish the package to nuget.org
         run: dotnet nuget push ./src/Mellon.MultiTenant/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
+  azure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
 
-      - name: Azure Restore dependencies
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: "6.0.0-alpha.1"
+          includePrerelease: true
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+
+      - name: Display GitVersion outputs
+        run: |
+          echo "Major: ${{ steps.gitversion.outputs.major }}"
+          echo "Minor: ${{ steps.gitversion.outputs.minor }}"
+          echo "Patch: ${{ steps.gitversion.outputs.patch }}"
+
+      - name: Restore dependencies
         run: dotnet restore ./src/Mellon.MultiTenant.Azure/Mellon.MultiTenant.Azure.csproj
 
-      - name: Azure Build
+      - name: Build
         run: dotnet build ./src/Mellon.MultiTenant.Azure/Mellon.MultiTenant.Azure.csproj --no-restore
 
-      - name: Azure Create the package
+      - name: Create the package
         run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.Azure/Mellon.MultiTenant.Azure.csproj -p:Version=1.0.${{ github.run_number }}-alpha
 
-      - name: Azure Publish the package to nuget.org
+      - name: Publish the package to nuget.org
         run: dotnet nuget push ./src/Mellon.MultiTenant.Azure/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
+  config-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
 
-      - name: Config-Server Restore dependencies
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: "6.0.0-alpha.1"
+          includePrerelease: true
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+
+      - name: Display GitVersion outputs
+        run: |
+          echo "Major: ${{ steps.gitversion.outputs.major }}"
+          echo "Minor: ${{ steps.gitversion.outputs.minor }}"
+          echo "Patch: ${{ steps.gitversion.outputs.patch }}"
+
+      - name: Restore dependencies
         run: dotnet restore ./src/Mellon.MultiTenant.ConfigServer/Mellon.MultiTenant.ConfigServer.csproj
 
-      - name: Config-Server Build
+      - name: Build
         run: dotnet build ./src/Mellon.MultiTenant.ConfigServer/Mellon.MultiTenant.ConfigServer.csproj --no-restore
 
-      - name: Config-Server Create the package
+      - name: Create the package
         run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.ConfigServer/Mellon.MultiTenant.ConfigServer.csproj -p:Version=1.0.${{ github.run_number }}-alpha
 
-      - name: Config-Server Publish the package to nuget.org
+      - name: Publish the package to nuget.org
         run: dotnet nuget push ./src/Mellon.MultiTenant.ConfigServer/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
+  base:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
 
-      - name: Base Restore dependencies
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: "6.0.0-alpha.1"
+          includePrerelease: true
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+
+      - name: Display GitVersion outputs
+        run: |
+          echo "Major: ${{ steps.gitversion.outputs.major }}"
+          echo "Minor: ${{ steps.gitversion.outputs.minor }}"
+          echo "Patch: ${{ steps.gitversion.outputs.patch }}"
+
+      - name: Restore dependencies
         run: dotnet restore ./src/Mellon.MultiTenant.Base/Mellon.MultiTenant.Base.csproj
 
-      - name: Base Build
+      - name: Build
         run: dotnet build ./src/Mellon.MultiTenant.Base/Mellon.MultiTenant.Base.csproj --no-restore
 
-      - name: Base Create the package
+      - name: Create the package
         run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.Base/Mellon.MultiTenant.Base.csproj -p:Version=1.0.${{ github.run_number }}-alpha
 
-      - name: Base Publish the package to nuget.org
+      - name: Publish the package to nuget.org
         run: dotnet nuget push ./src/Mellon.MultiTenant.Base/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
+  hangfire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
 
-      - name: Hangfire Restore dependencies
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: "6.0.0-alpha.1"
+          includePrerelease: true
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+
+      - name: Display GitVersion outputs
+        run: |
+          echo "Major: ${{ steps.gitversion.outputs.major }}"
+          echo "Minor: ${{ steps.gitversion.outputs.minor }}"
+          echo "Patch: ${{ steps.gitversion.outputs.patch }}"
+
+      - name: Restore dependencies
         run: dotnet restore ./src/Mellon.MultiTenant.Hangfire/Mellon.MultiTenant.Hangfire.csproj
 
-      - name: Hangfire Build
+      - name: Build
         run: dotnet build ./src/Mellon.MultiTenant.Hangfire/Mellon.MultiTenant.Hangfire.csproj --no-restore
 
-      - name: Hangfire Create the package
+      - name: Create the package
         run: dotnet pack --configuration Release ./src/Mellon.MultiTenant.Hangfire/Mellon.MultiTenant.Hangfire.csproj -p:Version=1.0.${{ github.run_number }}-alpha
 
-      - name: Hangfire Publish the package to nuget.org
+      - name: Publish the package to nuget.org
         run: dotnet nuget push ./src/Mellon.MultiTenant.Hangfire/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
