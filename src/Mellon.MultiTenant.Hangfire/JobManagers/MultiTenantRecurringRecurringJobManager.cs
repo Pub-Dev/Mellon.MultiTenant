@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace Mellon.MultiTenant.Hangfire.JobManagers;
 
-public class MultiTenantRecurringJobManager : IMultiTenantRecurringJobManager
+internal class MultiTenantRecurringJobManager : IMultiTenantRecurringJobManager
 {
     private readonly IRecurringJobManager _recurringJobManager;
 
@@ -41,7 +41,7 @@ public class MultiTenantRecurringJobManager : IMultiTenantRecurringJobManager
         {
             var jobName = GetTenantJobName(tenant, recurringJobId);
 
-            _recurringJobManager.AddOrUpdate(jobName, job, cronExpression, options);
+            _recurringJobManager.AddOrUpdate(jobName, job, cronExpression, options);            
         }
     }
 

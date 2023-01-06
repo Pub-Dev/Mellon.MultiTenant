@@ -13,13 +13,15 @@ public static class MultiTenantExtensions
     {
         services.AddScoped<IMultiTenantRecurringJobManager, MultiTenantRecurringJobManager>();
 
+        services.AddScoped<IMultiTenantBackgroundJobManager, MultiTenantBackgroundJobManager>();
+
         services.AddSingleton<MultiTenantClientFilter>();
 
         return services;
     }
 
     public static IGlobalConfiguration UseMultiTenant(
-        this IGlobalConfiguration globalConfiguration, 
+        this IGlobalConfiguration globalConfiguration,
         IServiceProvider serviceProvider)
     {
         globalConfiguration.UseFilter(serviceProvider.GetRequiredService<MultiTenantClientFilter>());

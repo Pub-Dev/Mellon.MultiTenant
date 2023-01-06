@@ -9,7 +9,9 @@ public class MultiTenantSettings
 {
     private Dictionary<string, IConfigurationRoot> configurations = new Dictionary<string, IConfigurationRoot>();
 
-    public List<string> Tenants => configurations?.Keys.ToList();
+    public IReadOnlyList<string> Tenants => configurations?.Keys.ToList();
+
+    public IReadOnlyDictionary<string, IConfigurationRoot> GetConfigurations => configurations;
 
     public void LoadConfiguration(string tenant, IConfigurationRoot configuration)
     {
@@ -22,8 +24,6 @@ public class MultiTenantSettings
             throw new Exception($"Tenant {tenant} already configured");
         }
     }
-
-    public IReadOnlyDictionary<string, IConfigurationRoot> GetConfigurations => configurations;
 
     public string[] LoadTenants(
         MultiTenantOptions multiTenantOptions,

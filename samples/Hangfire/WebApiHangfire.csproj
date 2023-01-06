@@ -6,7 +6,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Hangfire.SqlServer" Version="1.7.32" />
+		<PackageReference Include="Hangfire.SqlServer" Version="1.8.0-rc2" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
 		<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
 	</ItemGroup>
 

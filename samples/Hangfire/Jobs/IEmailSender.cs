@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Hangfire.Server;
 
 namespace WebApiHangfire.Jobs;
 
@@ -6,5 +7,7 @@ namespace WebApiHangfire.Jobs;
 public interface IEmailSender
 {
     Task ExecuteAsync();
+
+    Task ExecuteLongJobAsync(int name, PerformContext context);
 }
 

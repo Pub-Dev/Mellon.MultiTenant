@@ -35,9 +35,12 @@ public static class MultiTenantRecurringJobManagerExtensions
             throw new ArgumentNullException("cronExpression");
         }
 
-        Job job = Job.FromExpression(methodCall);
+        Job job = Job.FromExpression(methodCall, queue);
 
-        manager.AddOrUpdate(recurringJobId, job, cronExpression, timeZone ?? TimeZoneInfo.Utc, queue);
+        manager.AddOrUpdate(recurringJobId, job, cronExpression, new RecurringJobOptions
+        {
+            TimeZone = timeZone
+        });
     }
 
     public static void AddOrUpdateForAllTenants<T>(
@@ -68,9 +71,9 @@ public static class MultiTenantRecurringJobManagerExtensions
             throw new ArgumentNullException("cronExpression");
         }
 
-        Job job = Job.FromExpression(methodCall);
+        Job job = Job.FromExpression(methodCall, queue);
 
-        manager.AddOrUpdateForAllTenants(recurringJobId, job, cronExpression, timeZone ?? TimeZoneInfo.Utc, queue);
+        manager.AddOrUpdateForAllTenants(recurringJobId, job, cronExpression, timeZone ?? TimeZoneInfo.Utc);
     }
 
     public static void AddOrUpdateForAllTenants(
@@ -78,8 +81,7 @@ public static class MultiTenantRecurringJobManagerExtensions
         string recurringJobId, 
         Job job, 
         string cronExpression, 
-        TimeZoneInfo timeZone, 
-        string queue)
+        TimeZoneInfo timeZone)
     {
         if (manager == null)
         {
@@ -91,14 +93,8 @@ public static class MultiTenantRecurringJobManagerExtensions
             throw new ArgumentNullException("timeZone");
         }
 
-        if (queue == null)
-        {
-            throw new ArgumentNullException("queue");
-        }
-
         manager.AddOrUpdateForAllTenants(recurringJobId, job, cronExpression, new RecurringJobOptions
         {
-            QueueName = queue,
             TimeZone = timeZone
         });
     }

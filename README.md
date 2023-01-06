@@ -161,7 +161,7 @@ public class LocalXmlTenantSource : ITenantConfigurationSource
 This is the default source of settings for the tenants, there is no need to enable it, it will search for the settings on the application following this pattern:
 
 - `appsettings.{tenant}.json`
-- `appsettings.{_hostEnvironment.EnvironmentName}.json`
+- `appsettings.{tenant}.{_hostEnvironment.EnvironmentName}.json`
 
 It is also worth mentioning that the configurations will also contain:
 
@@ -259,9 +259,176 @@ builder.Services
         );
 ```
 
+## Hangfire
+
+If you need to work with jobs with the concept of multi-tenant using **Hangfire**
+
+To enable the usage you need to install an extra package:
+
+With package Manager:
+
+```
+Install-Package Mellon-MultiTenant-Hangfire
+```
+
+With .NET CLI:
+
+```
+dotnet add package Mellon-MultiTenant-Hangfire
+```
+
+Once the package is installed you need to configure its services
+
+```csharp
+builder.Services
+        .AddMultiTenant()
+        .AddMultiTenantHangfire();
+```
+
+And when adding the Service `AddHangfire` you need to call the method `UseMultiTenant` passing the `IServiceProvider`
+
+```csharp
+builder.Services.AddHangfire((serviceProvider, config) =>
+{
+    // some code
+    config.UseMultiTenant(serviceProvider);
+    // some code
+});
+```
+
+To create the Worker, you need to pass the queues with the tenant names
+
+```csharp
+builder.Services.AddHangfireServer((serviceProvider, config) =>
+{
+    var multiTenantSettings = serviceProvider.GetRequiredService<MultiTenantSettings>();
+
+    var queues = new List<string>(multiTenantSettings.Tenants);
+
+    // if you want to add more queues
+    queues.Add("cron");
+    queues.Add("default");
+    config.Queues = tenants.ToArray();
+
+    // some code
+});
+```
+
+For **ScheduleJobs** and **BackgroundJob** the queue name will be the _tenant name_
+
+For **RecurringJobs** the default queue could vary from job to job
+
+### RecurringJobs 🗓️
+
+To create Recurring Jobs you just need to use the interface `IMultiTenantRecurringJobManager`, this interface will have the following methods and extension methods:
+
+#### `AddOrUpdateForAllTenants<T>(string recurringJobId,Expression<Func<T, Task>> methodCall, string cronExpression, TimeZoneInfo timeZone = null,string queue = "default")`
+
+It will create a recurring job from the type `T.Method` for all the tenants
+
+#### `AddOrUpdateForAllTenants(string recurringJobId, Job job, string cronExpression, TimeZoneInfo timeZone)`
+
+It will create a recurring job for all the tenants
+
+#### `AddOrUpdate<T>(string recurringJobId,Expression<Func<T, Task>> methodCall, string cronExpression, TimeZoneInfo timeZone = null,string queue = "default")`
+
+It will create a recurring job from the type `T.Method` for the current tenant
+
+#### `AddOrUpdate(string recurringJobId, Job job, string cronExpression, TimeZoneInfo timeZone)`
+
+It will create a recurring job for the current tenant
+
+#### `RemoveIfExistsForAllTenants(string recurringJobId)`
+
+It will remove the recurring job for all the tenants
+
+#### `RemoveIfExists(string recurringJobId)`
+
+It will remove the recurring job for the current tenants
+
+#### `TriggerForAllTenants(string recurringJobId)`
+
+It will enqueue the recurring job for all the tenants
+
+#### `Trigger(string recurringJobId)`
+
+It will enqueue the recurring job for the current tenants
+
+### Background Jobs ⚙️
+
+To create Background Jobs you just need to use the interface `IMultiTenantBackgroundJobManager`, this interface will have the following methods and extension methods:
+
+#### `IList<(string tenant, string jobId)> EnqueueForAllTenants(Expression<Action> methodCall)`
+
+It will enqueue a job execution for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId created for that tenant
+
+#### `IList<(string tenant, string jobId)> EnqueueForAllTenants(Expression<Func<Task>> methodCall)`
+
+It will enqueue a job execution for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId created for that tenant
+
+#### `IList<(string tenant, string jobId)> EnqueueForAllTenants<T>(Expression<Action<T>> methodCall)`
+
+It will enqueue a job execution of type `T.Method` for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId created for that tenant
+
+#### `IList<(string tenant, string jobId)> EnqueueForAllTenants<T>(Expression<Func<T, Task>> methodCall)`
+
+It will enqueue a job execution of type `T.Task<Method>` for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId created for that tenant
+
+#### `string Enqueue(Expression<Action> methodCall)`
+
+It will enqueue a job execution for the current tenant, sending the job for a queue with the tenant's name, the return the jobId
+
+#### `string Enqueue(Expression<Func<Task>> methodCall)`
+
+It will enqueue a job execution for the current tenant, sending the job for a queue with the tenant's name, the return the jobId
+
+#### `string Enqueue<T>(Expression<Action<T>> methodCall)`
+
+It will enqueue a job execution of type `T.Method` for the current tenant, sending the job for a queue with the tenant's name, the return the jobId
+
+#### `string Enqueue<T>(Expression<Func<T, Task>> methodCall)`
+
+It will enqueue a job execution of type `T.Task<Method>` for the current tenant, sending the job for a queue with the tenant's name, the return the jobId
+
+### Schedule Jobs ⌚
+
+To Schedule Jobs you just need to use the interface `IMultiTenantBackgroundJobManager`, this interface will have the following methods and extension methods:
+
+#### `IList<(string tenant, string jobId)> ScheduleForAllTenants(Expression<Action> methodCall, TimeSpan delay)`
+
+It will Schedule a job execution for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId Scheduled for that tenant
+
+#### `IList<(string tenant, string jobId)> ScheduleForAllTenants((Expression<Func<Task>> methodCall, TimeSpan delay)`
+
+It will Schedule a job execution for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId Scheduled for that tenant
+
+#### `IList<(string tenant, string jobId)> ScheduleForAllTenants<T>(Expression<Action<T>> methodCall, TimeSpan delay)`
+
+It will Schedule a job execution of type `T.Method` for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId Scheduled for that tenant
+
+#### `IList<(string tenant, string jobId)> ScheduleForAllTenants<T>(Expression<Func<T, Task>> methodCall, TimeSpan delay)`
+
+It will Schedule a job execution of type `T.Task<Method>` for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId Scheduled for that tenant
+
+#### `string Schedule(Expression<Action> methodCall, TimeSpan delay)`
+
+It will Schedule a job execution for the current tenant, sending the job for a queue with the tenant's name, returning the Scheduled JobId
+
+#### `string Schedule(Expression<Func<Task>> methodCall, TimeSpan delay)`
+
+It will enqueue a job execution for the current tenant, sending the job for a queue with the tenant's name, returning the Scheduled JobId
+
+#### `string Schedule<T>(Expression<Action<T>> methodCall, TimeSpan delay)`
+
+It will enqueue a job execution of type `T.Method` for the current tenant, sending the job for a queue with the tenant's name, returning the Scheduled JobId
+
+#### `string Schedule<T>(Expression<Func<T, Task>> methodCall, TimeSpan delay)`
+
+It will enqueue a job execution of type `T.Task<Method>` for the current tenant, sending the job for a queue with the tenant's name, returning the Scheduled JobId
+
 ## Usage / Samples
 
-You can find some examples of how to use this library in the folder `/samples`
+You can find some examples of how to use this library in the folder `/samples` with WebApi and Hangfire examples
 
 ### Web API
 
@@ -341,16 +508,12 @@ We know that settings can be changed all the time, but to get our applications r
 
 PS: this will work only with AzureAppConfiguration and SpringCloudConfig
 
-## Hangfire
-
-[WIP] 🔥
-
 ## Roadmap
 
-- Add unit tests 🧪
-- Add new Config Source
-- Load the Tenants from a web-api request
-- Enable the usage with HangFire [WIP] 🔥
+- [ ] Add unit tests 🧪
+- [x] Add new Config Source
+- [ ] Load the Tenants from a web-api request
+- [x] Enable the usage with HangFire
 
 See the [open issues](https://github.com/Pub-Dev/Mellon.MultiTenant/issues) for a full list of proposed features (and known issues).
 
