@@ -1,7 +1,7 @@
 name: Build, Pack and Publish
 
 on:
-  pull_request:
+  push:
     branches: [main]
     paths-ignore:
       - "**/README.md"
