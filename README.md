@@ -1,3 +1,4 @@
+
 [![Contributors][contributors-shield]][contributors-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![Issues][issues-shield]][issues-url] [![LinkedIn][linkedin-shield]][linkedin-url] [![LinkedIn][linkedin-shield]][linkedin2-url]
 
 ## Mellon.MultiTenant by [@PubDev](https://www.youtube.com/@PubDev)
@@ -358,35 +359,35 @@ It will enqueue the recurring job for the current tenants
 
 To create Background Jobs you just need to use the interface `IMultiTenantBackgroundJobManager`, this interface will have the following methods and extension methods:
 
-#### `IList<(string tenant, string jobId)> EnqueueForAllTenants(Expression<Action> methodCall)`
+#### `EnqueueForAllTenants(Expression<Action> methodCall)`
 
 It will enqueue a job execution for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId created for that tenant
 
-#### `IList<(string tenant, string jobId)> EnqueueForAllTenants(Expression<Func<Task>> methodCall)`
+#### `EnqueueForAllTenants(Expression<Func<Task>> methodCall)`
 
 It will enqueue a job execution for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId created for that tenant
 
-#### `IList<(string tenant, string jobId)> EnqueueForAllTenants<T>(Expression<Action<T>> methodCall)`
+#### `EnqueueForAllTenants<T>(Expression<Action<T>> methodCall)`
 
 It will enqueue a job execution of type `T.Method` for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId created for that tenant
 
-#### `IList<(string tenant, string jobId)> EnqueueForAllTenants<T>(Expression<Func<T, Task>> methodCall)`
+#### `EnqueueForAllTenants<T>(Expression<Func<T, Task>> methodCall)`
 
 It will enqueue a job execution of type `T.Task<Method>` for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId created for that tenant
 
-#### `string Enqueue(Expression<Action> methodCall)`
+#### `Enqueue(Expression<Action> methodCall)`
 
 It will enqueue a job execution for the current tenant, sending the job for a queue with the tenant's name, the return the jobId
 
-#### `string Enqueue(Expression<Func<Task>> methodCall)`
+#### `Enqueue(Expression<Func<Task>> methodCall)`
 
 It will enqueue a job execution for the current tenant, sending the job for a queue with the tenant's name, the return the jobId
 
-#### `string Enqueue<T>(Expression<Action<T>> methodCall)`
+#### `Enqueue<T>(Expression<Action<T>> methodCall)`
 
 It will enqueue a job execution of type `T.Method` for the current tenant, sending the job for a queue with the tenant's name, the return the jobId
 
-#### `string Enqueue<T>(Expression<Func<T, Task>> methodCall)`
+#### `Enqueue<T>(Expression<Func<T, Task>> methodCall)`
 
 It will enqueue a job execution of type `T.Task<Method>` for the current tenant, sending the job for a queue with the tenant's name, the return the jobId
 
@@ -394,35 +395,35 @@ It will enqueue a job execution of type `T.Task<Method>` for the current tenant,
 
 To Schedule Jobs you just need to use the interface `IMultiTenantBackgroundJobManager`, this interface will have the following methods and extension methods:
 
-#### `IList<(string tenant, string jobId)> ScheduleForAllTenants(Expression<Action> methodCall, TimeSpan delay)`
+#### `ScheduleForAllTenants(Expression<Action> methodCall, TimeSpan delay)`
 
 It will Schedule a job execution for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId Scheduled for that tenant
 
-#### `IList<(string tenant, string jobId)> ScheduleForAllTenants((Expression<Func<Task>> methodCall, TimeSpan delay)`
+#### `ScheduleForAllTenants((Expression<Func<Task>> methodCall, TimeSpan delay)`
 
 It will Schedule a job execution for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId Scheduled for that tenant
 
-#### `IList<(string tenant, string jobId)> ScheduleForAllTenants<T>(Expression<Action<T>> methodCall, TimeSpan delay)`
+#### `ScheduleForAllTenants<T>(Expression<Action<T>> methodCall, TimeSpan delay)`
 
 It will Schedule a job execution of type `T.Method` for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId Scheduled for that tenant
 
-#### `IList<(string tenant, string jobId)> ScheduleForAllTenants<T>(Expression<Func<T, Task>> methodCall, TimeSpan delay)`
+#### `ScheduleForAllTenants<T>(Expression<Func<T, Task>> methodCall, TimeSpan delay)`
 
 It will Schedule a job execution of type `T.Task<Method>` for all the tenant, sending the jobs for a queue with the tenant's name, the return object with consist in a list containing the tenant and the JobId Scheduled for that tenant
 
-#### `string Schedule(Expression<Action> methodCall, TimeSpan delay)`
+#### `Schedule(Expression<Action> methodCall, TimeSpan delay)`
 
 It will Schedule a job execution for the current tenant, sending the job for a queue with the tenant's name, returning the Scheduled JobId
 
-#### `string Schedule(Expression<Func<Task>> methodCall, TimeSpan delay)`
+#### `Schedule(Expression<Func<Task>> methodCall, TimeSpan delay)`
 
 It will enqueue a job execution for the current tenant, sending the job for a queue with the tenant's name, returning the Scheduled JobId
 
-#### `string Schedule<T>(Expression<Action<T>> methodCall, TimeSpan delay)`
+#### `Schedule<T>(Expression<Action<T>> methodCall, TimeSpan delay)`
 
 It will enqueue a job execution of type `T.Method` for the current tenant, sending the job for a queue with the tenant's name, returning the Scheduled JobId
 
-#### `string Schedule<T>(Expression<Func<T, Task>> methodCall, TimeSpan delay)`
+#### `Schedule<T>(Expression<Func<T, Task>> methodCall, TimeSpan delay)`
 
 It will enqueue a job execution of type `T.Task<Method>` for the current tenant, sending the job for a queue with the tenant's name, returning the Scheduled JobId
 
