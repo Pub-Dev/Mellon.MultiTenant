@@ -237,7 +237,7 @@ builder.Services
         .AddMultiTenantAzureAppConfiguration();
 ```
 
-### `AddMultiTenantAzureAppConfiguration(Action<AzureMultiTenantOptions> action = null)`
+#### `AddMultiTenantAzureAppConfiguration(Action<AzureMultiTenantOptions> action = null)`
 
 if the action is not passed, the connection string used to connect on azure will be loaded from `AzureAppConfigurationConnectionString`
 
