@@ -3,8 +3,8 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Title>Mellon - MultiTenant ConfigServer</Title>
-		<PackageId>Mellon-MultiTenant-ConfigServer</PackageId>
+		<Title>Mellon - MultiTenant Hangfire</Title>
+		<PackageId>Mellon-MultiTenant-Hangfire</PackageId>
 		<Authors>1berto and Naga</Authors>
 		<Company>PubDev</Company>
 		<Description>A Package to create Multi-Tenant Applications using NET</Description>
@@ -21,14 +21,18 @@
 		<None Include="..\..\readme.md" Pack="true" PackagePath="\" />
 		<None Include="..\..\logo.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
-		<PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="3.2.1" />
-		<PackageReference Include="Steeltoe.Extensions.Configuration.PlaceholderCore" Version="3.2.1" />
+		<PackageReference Include="Hangfire" Version="1.8.0-rc2" />
+		<PackageReference Include="Hangfire.Console" Version="1.4.2" />
+		<PackageReference Include="Hangfire.Core" Version="1.8.0-rc2" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Mellon.MultiTenant.Base\Mellon.MultiTenant.Base.csproj" />
-	</ItemGroup>	
-
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\Mellon.MultiTenant.Base\Mellon.MultiTenant.Base.csproj" />
+	</ItemGroup>
 </Project>
