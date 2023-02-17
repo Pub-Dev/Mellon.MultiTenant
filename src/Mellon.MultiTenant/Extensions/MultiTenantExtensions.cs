@@ -111,58 +111,61 @@ public static class MultiTenantExtensions
 
     private static IEndpointRouteBuilder AddRefreshEndpoint(this IEndpointRouteBuilder routeBuilder)
     {
-        routeBuilder.MapGet("refresh-settings/{tenantName?}", 
-            (
+        routeBuilder.MapGet("refresh-settings/{tenantName?}", RefreshEndpoint);
+        
+        routeBuilder.MapGet("refresh-settings", RefreshEndpoint);
+
+
+        return routeBuilder;
+    }
+
+    private static IResult RefreshEndpoint(
                 string tenantName,
                 IConfiguration configuration,
                 IHostEnvironment hostEnvironment,
                 ITenantConfigurationSource multiTenantSource,
                 MultiTenantOptions multiTenantOptions,
-                MultiTenantSettings multiTenantSettings) =>
+                MultiTenantSettings multiTenantSettings)
+    {
+        bool TryFindAndRefreshSettings(string tenantName)
+        {
+            if (multiTenantSettings.GetConfigurations.TryGetValue(tenantName, out var conf))
+            {
+                if (conf is IConfigurationRoot configurationRoot)
                 {
-                    bool TryFindAndRefreshSettings(string tenantName)
-                    {
-                        if (multiTenantSettings.GetConfigurations.TryGetValue(tenantName, out var conf))
-                        {
-                            if (conf is IConfigurationRoot configurationRoot)
-                            {
-                                configurationRoot.Reload();
-                            }
-
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                    if (!string.IsNullOrEmpty(tenantName))
-                    {
-                        if (!TryFindAndRefreshSettings(tenantName))
-                        {
-                            return Results.NotFound(new { Message = "Tenant not found" });
-                        }
-                    }
-                    else
-                    {
-                        foreach (var tenant in multiTenantSettings.LoadTenants(multiTenantOptions, configuration))
-                        {
-                            if (!TryFindAndRefreshSettings(tenant))
-                            {
-                                multiTenantSettings.LoadConfiguration(
-                                    tenant,
-                                    multiTenantSettings.BuildTenantConfiguration(
-                                        hostEnvironment,
-                                        multiTenantSource,
-                                        multiTenantOptions,
-                                        tenant));
-                            }
-                        }
-                    }
-
-                    return Results.Ok(new { Message = "Refresh Done!" });
+                    configurationRoot.Reload();
                 }
-            );
 
-        return routeBuilder;
+                return true;
+            }
+
+            return false;
+        }
+
+        if (!string.IsNullOrEmpty(tenantName))
+        {
+            if (!TryFindAndRefreshSettings(tenantName))
+            {
+                return Results.NotFound(new { Message = "Tenant not found" });
+            }
+        }
+        else
+        {
+            foreach (var tenant in multiTenantSettings.LoadTenants(multiTenantOptions, configuration))
+            {
+                if (!TryFindAndRefreshSettings(tenant))
+                {
+                    multiTenantSettings.LoadConfiguration(
+                        tenant,
+                        multiTenantSettings.BuildTenantConfiguration(
+                            hostEnvironment,
+                            multiTenantSource,
+                            multiTenantOptions,
+                            tenant));
+                }
+            }
+        }
+
+        return Results.Ok(new { Message = "Refresh Done!" });
     }
 }

@@ -32,11 +32,25 @@ public class MultiTenantSettings
         switch (multiTenantOptions.TenantSource)
         {
             case TenantSource.EnvironmentVariables:
+                if (configuration["MULTITENANT_TENANTS"] is null)
+                {
+                    throw new Exception($"MULTITENANT_TENANTS not set!");
+                }
                 return configuration["MULTITENANT_TENANTS"].Split(',', StringSplitOptions.RemoveEmptyEntries);
 
             case TenantSource.Settings:
+                if (configuration.GetSection("MultiTenant:Tenants") is null)
+                {
+                    throw new Exception($"MultiTenant:Tenants not set!");
+                }
                 return configuration.GetSection("MultiTenant:Tenants").Get<string[]>();
-
+            case TenantSource.Endpoint:
+                var tenants = multiTenantOptions.GetTenantSourceHttpEndpointFunc(multiTenantOptions.Endpoint, configuration);
+                if (tenants.Length == 0)
+                {
+                    throw new Exception($"No Tenants found on the external endpoint!");
+                }
+                return tenants;
             default:
                 throw new Exception($"{nameof(multiTenantOptions.TenantSource)} not set!");
         }

@@ -1,6 +1,7 @@
 using Mellon.MultiTenant.Base.Enums;
 using Mellon.MultiTenant.Base.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace Mellon.MultiTenant.Base;
 
@@ -18,9 +19,15 @@ public class MultiTenantOptions
 
     public string DefaultTenant { get; set; }
 
+    public List<string> SkipTenantCheckPaths { get; set; }
+
     public Func<HttpContext, string> GetTenantFromHttClientFunc { get; private set; }
 
     public Type CustomMultiTenantConfigurationSource { get; private set; }
+
+    public Func<EndpointSettings, IConfiguration, string[]> GetTenantSourceHttpEndpointFunc { get; private set; }
+
+    public EndpointSettings Endpoint { get; set; }
 
     public MultiTenantOptions LoadFromSettings()
     {
@@ -32,6 +39,15 @@ public class MultiTenantOptions
     public MultiTenantOptions LoadFromEnvironmentVariable()
     {
         TenantSource = TenantSource.EnvironmentVariables;
+
+        return this;
+    }
+
+    public MultiTenantOptions LoadFromEndpoint(Func<EndpointSettings, IConfiguration, string[]> func)
+    {
+        TenantSource = TenantSource.Endpoint;
+
+        GetTenantSourceHttpEndpointFunc = func;
 
         return this;
     }
@@ -72,10 +88,16 @@ public class MultiTenantOptions
         return this;
     }
 
-    public MultiTenantOptions WithCustomTenantConfigurationSource<T>() where T: ITenantConfigurationSource
+    public MultiTenantOptions WithCustomTenantConfigurationSource<T>() where T : ITenantConfigurationSource
     {
         CustomMultiTenantConfigurationSource = typeof(T);
 
         return this;
+    }
+
+    public class EndpointSettings
+    {
+        public string Url { get; set; }
+        public string Authorization { get; set; }
     }
 }
