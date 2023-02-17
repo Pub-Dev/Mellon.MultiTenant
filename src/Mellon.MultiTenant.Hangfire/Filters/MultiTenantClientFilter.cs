@@ -63,7 +63,7 @@ internal class MultiTenantClientFilter : IClientFilter, IServerFilter
 
         filterContext.Parameters.TryGetValue("TenantName", out var tenantName);
 
-        _logger.LogWarning(
+        _logger.LogInformation(
             "Job `{recurringJobId}` that is based on method `{Name}` has been created with id `{Id}` for Tenant `{tenant}`",
             jobId,
             filterContext.Job.Method.Name,
