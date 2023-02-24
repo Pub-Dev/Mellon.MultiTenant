@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Title>Mellon - MultiTenant</Title>
+		<Title>Mellon.MultiTenant</Title>
 		<PackageId>Mellon-MultiTenant</PackageId>
 		<Authors>1berto and Naga</Authors>
 		<Company>PubDev</Company>

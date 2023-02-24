@@ -2,12 +2,13 @@
 using Hangfire.Console;
 using Hangfire.Server;
 using Hangfire.States;
+using Hangfire.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Mellon.MultiTenant.Hangfire.Filters;
 
-internal class MultiTenantClientFilter : IClientFilter, IServerFilter
+internal class MultiTenantClientFilter : IClientFilter, IServerFilter, IApplyStateFilter
 {
     private readonly ILogger<MultiTenantClientFilter> _logger;
     private readonly IServiceScopeFactory _factory;
@@ -83,5 +84,30 @@ internal class MultiTenantClientFilter : IClientFilter, IServerFilter
         var tenantName = filterContext.GetJobParameter<string>("TenantName");
 
         filterContext.WriteLine(ConsoleTextColor.Yellow, $"Process completed for the {tenantName} 🚀");
+    }
+
+    public void OnStateApplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
+    {
+        var id = context.BackgroundJob.Id;
+
+        var state = context.Connection.GetStateData(id);
+
+        var queue = context.GetJobParameter<string>("TenantName");
+
+        if (!string.IsNullOrWhiteSpace(queue) && state is null)
+        {
+            if (context.NewState is EnqueuedState newState)
+            {
+                if (newState.Queue == "tenant-name")
+                {
+                    newState.Queue = queue;
+                }
+            }
+        }
+    }
+
+    public void OnStateUnapplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
+    {
+
     }
 }

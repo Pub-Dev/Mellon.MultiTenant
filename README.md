@@ -5,13 +5,13 @@
 
 |               Package               |                                                                  Version                                                                   |                                                                     Alpha                                                                     |
 | :---------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------: |
-|       **Mellon-MultiTenant**        |              [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant)](https://www.nuget.org/packages/Mellon-MultiTenant)              |              [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant)](https://www.nuget.org/packages/Mellon-MultiTenant)              |
-|     **Mellon-MultiTenant-Base**     |         [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant-Base)](https://www.nuget.org/packages/Mellon-MultiTenant-Base)         |         [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant-Base)](https://www.nuget.org/packages/Mellon-MultiTenant-Base)         |
-| **Mellon-MultiTenant-ConfigServer** | [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant-ConfigServer)](https://www.nuget.org/packages/Mellon-MultiTenant-ConfigServer) | [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant-ConfigServer)](https://www.nuget.org/packages/Mellon-MultiTenant-ConfigServer) |
-|    **Mellon-MultiTenant-Azure**     |        [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant-Azure)](https://www.nuget.org/packages/Mellon-MultiTenant-Azure)        |        [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant-Azure)](https://www.nuget.org/packages/Mellon-MultiTenant-Azure)        |
-|   **Mellon-MultiTenant-Hangfire**   |     [![Nuget](https://img.shields.io/nuget/v/Mellon-MultiTenant-Hangfire)](https://www.nuget.org/packages/Mellon-MultiTenant-Hangfire)     |     [![Nuget](https://img.shields.io/nuget/vpre/Mellon-MultiTenant-Hangfire)](https://www.nuget.org/packages/Mellon-MultiTenant-Hangfire)     |
+|       **Mellon.MultiTenant**        |              [![Nuget](https://img.shields.io/nuget/v/Mellon.MultiTenant)](https://www.nuget.org/packages/Mellon.MultiTenant)              |              [![Nuget](https://img.shields.io/nuget/vpre/Mellon.MultiTenant)](https://www.nuget.org/packages/Mellon.MultiTenant)              |
+|     **Mellon.MultiTenant.Base**     |         [![Nuget](https://img.shields.io/nuget/v/Mellon.MultiTenant.Base)](https://www.nuget.org/packages/Mellon.MultiTenant.Base)         |         [![Nuget](https://img.shields.io/nuget/vpre/Mellon.MultiTenant.Base)](https://www.nuget.org/packages/Mellon.MultiTenant.Base)         |
+| **Mellon.MultiTenant.ConfigServer** | [![Nuget](https://img.shields.io/nuget/v/Mellon.MultiTenant.ConfigServer)](https://www.nuget.org/packages/Mellon.MultiTenant.ConfigServer) | [![Nuget](https://img.shields.io/nuget/vpre/Mellon.MultiTenant.ConfigServer)](https://www.nuget.org/packages/Mellon.MultiTenant.ConfigServer) |
+|    **Mellon.MultiTenant.Azure**     |        [![Nuget](https://img.shields.io/nuget/v/Mellon.MultiTenant.Azure)](https://www.nuget.org/packages/Mellon.MultiTenant.Azure)        |        [![Nuget](https://img.shields.io/nuget/vpre/Mellon.MultiTenant.Azure)](https://www.nuget.org/packages/Mellon.MultiTenant.Azure)        |
+|   **Mellon.MultiTenant.Hangfire**   |     [![Nuget](https://img.shields.io/nuget/v/Mellon.MultiTenant.Hangfire)](https://www.nuget.org/packages/Mellon.MultiTenant.Hangfire)     |     [![Nuget](https://img.shields.io/nuget/vpre/Mellon.MultiTenant.Hangfire)](https://www.nuget.org/packages/Mellon.MultiTenant.Hangfire)     |
 
-![Downloads](https://img.shields.io/nuget/dt/Mellon-MultiTenant.svg 'Downloads') [![GitHublicense](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/1bberto/Mellon.MultiTenant/main/LICENSE) [![CI](https://github.com/Pub-Dev/Mellon.MultiTenant/actions/workflows/buildAndPush.yml/badge.svg?branch=main)](https://github.com/Pub-Dev/Mellon.MultiTenant/actions/workflows/buildAndPush.yml)
+![Downloads](https://img.shields.io/nuget/dt/Mellon.MultiTenant.svg 'Downloads') [![GitHublicense](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/1bberto/Mellon.MultiTenant/main/LICENSE) [![CI](https://github.com/Pub-Dev/Mellon.MultiTenant/actions/workflows/buildAndPush.yml/badge.svg?branch=main)](https://github.com/Pub-Dev/Mellon.MultiTenant/actions/workflows/buildAndPush.yml)
 
 Why Mellon, mellon is the Sindarin (and Noldorin) word for "friend", yes I'm a big fan of LoR, so let's be friends?
 
@@ -21,7 +21,7 @@ This library was created to supply a set of tools to enable the creation of mult
 
 ### Built With
 
-- [net6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+- [net7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 - [steeltoe](https://docs.steeltoe.io/api/v3/configuration)
 - [Azure App Configuration](https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview)
 - [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/reference/html)
@@ -34,13 +34,13 @@ This library was created to supply a set of tools to enable the creation of mult
 With package Manager:
 
 ```
-Install-Package Mellon-MultiTenant
+Install-Package Mellon.MultiTenant
 ```
 
 With .NET CLI:
 
 ```
-dotnet add package Mellon-MultiTenant
+dotnet add package Mellon.MultiTenant
 ```
 
 ### Configurations
@@ -179,13 +179,13 @@ To enable the usage you need to install an extra package:
 With package Manager:
 
 ```
-Install-Package Mellon-MultiTenant-ConfigServer
+Install-Package Mellon.MultiTenant.ConfigServer
 ```
 
 With .NET CLI:
 
 ```
-dotnet add package Mellon-MultiTenant-ConfigServer
+dotnet add package Mellon.MultiTenant.ConfigServer
 ```
 
 Once the package is installed you need to configure its services
@@ -221,13 +221,13 @@ You can also use it as a source of configuration the **Azure App Configuration**
 With package Manager:
 
 ```
-Install-Package Mellon-MultiTenant-Azure
+Install-Package Mellon.MultiTenant.Azure
 ```
 
 With .NET CLI:
 
 ```
-dotnet add package Mellon-MultiTenant-Azure
+dotnet add package Mellon.MultiTenant.Azure
 ```
 
 Once the package is installed you need to configure its services
@@ -269,13 +269,13 @@ To enable the usage you need to install an extra package:
 With package Manager:
 
 ```
-Install-Package Mellon-MultiTenant-Hangfire
+Install-Package Mellon.MultiTenant.Hangfire
 ```
 
 With .NET CLI:
 
 ```
-dotnet add package Mellon-MultiTenant-Hangfire
+dotnet add package Mellon.MultiTenant.Hangfire
 ```
 
 Once the package is installed you need to configure its services
@@ -513,8 +513,9 @@ PS: this will work only with AzureAppConfiguration and SpringCloudConfig
 
 - [ ] Add unit tests 🧪
 - [x] Add new Config Source
-- [ ] Load the Tenants from a web-api request
+- [x] Load the Tenants from a web-api request
 - [x] Enable the usage with HangFire
+- [ ] Update documentation with new features
 
 See the [open issues](https://github.com/Pub-Dev/Mellon.MultiTenant/issues) for a full list of proposed features (and known issues).
 
