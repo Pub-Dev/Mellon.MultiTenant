@@ -3,8 +3,8 @@
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Title>Mellon - MultiTenant Base</Title>
-		<PackageId>Mellon.MultiTenant.Base</PackageId>
+		<Title>Mellon.MultiTenant.Base</Title>
+		<PackageId>Mellon-MultiTenant-Base</PackageId>
 		<Authors>1berto and Naga</Authors>
 		<Company>PubDev</Company>
 		<Description>A Package to create Multi-Tenant Applications using NET</Description>
