@@ -94,7 +94,7 @@ internal class MultiTenantClientFilter : IClientFilter, IServerFilter, IApplySta
 
         var queue = context.GetJobParameter<string>("TenantName");
 
-        if (!string.IsNullOrWhiteSpace(queue) && state is null)
+        if (!string.IsNullOrWhiteSpace(queue))
         {
             if (context.NewState is EnqueuedState newState)
             {
