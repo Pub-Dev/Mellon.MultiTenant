@@ -8,19 +8,11 @@ namespace Mellon.MultiTenant.Hangfire.Attributes
 {
     public class PreventConcurrentExecutionJobFilter : JobFilterAttribute, IClientFilter, IServerFilter
     {
-        public PreventConcurrentExecutionJobFilter()
-        {
-
-        }
-
         public void OnCreating(CreatingContext filterContext)
         {
             var processingJobs = JobStorage.Current.GetMonitoringApi().ProcessingJobs(0, 100);
 
-            var scheduledJobs = JobStorage.Current.GetMonitoringApi().ScheduledJobs(0, 100);
-
-            if (processingJobs.Count(x => GetResource(x.Value.Job) == GetResource(filterContext.Job)) > 0 ||
-                scheduledJobs.Count(x => GetResource(x.Value.Job) == GetResource(filterContext.Job)) > 0)
+            if (processingJobs.Count(x => GetResource(x.Value.Job) == GetResource(filterContext.Job)) > 0)
             {
                 filterContext.SetJobParameter("Reason", "Job was already running");
 
@@ -30,12 +22,10 @@ namespace Mellon.MultiTenant.Hangfire.Attributes
 
         public void OnPerforming(PerformingContext filterContext)
         {
-
         }
 
         public void OnPerformed(PerformedContext filterContext)
         {
-
         }
 
         public void OnCreated(CreatedContext filterContext)
@@ -45,7 +35,7 @@ namespace Mellon.MultiTenant.Hangfire.Attributes
         private string GetResource(Job job)
         {
             var resourceName = $"{job.Queue}-{job.Type.ToGenericTypeString()}-{job.Method}-{string.Join('-', job.Args)}".ToLowerInvariant();
-            
+
             return resourceName;
         }
     }
