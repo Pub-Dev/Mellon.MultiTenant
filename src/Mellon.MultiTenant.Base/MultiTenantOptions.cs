@@ -2,6 +2,7 @@ using Mellon.MultiTenant.Base.Enums;
 using Mellon.MultiTenant.Base.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System.Net.Http.Json;
 
 namespace Mellon.MultiTenant.Base;
 
@@ -52,6 +53,52 @@ public class MultiTenantOptions
         return this;
     }
 
+    public MultiTenantOptions LoadFromEndpoint<T>(Func<T, string> func)
+    {
+        return LoadFromEndpoint((endpointOptions, configuration) =>
+        {
+            var request = new HttpRequestMessage()
+            {
+                RequestUri = new Uri(endpointOptions.Url),
+                Method = new HttpMethod(endpointOptions.Method ?? "GET"),
+            };
+
+            if (!string.IsNullOrEmpty(endpointOptions.Authorization))
+            {
+                request.Headers.Add("Authorization", endpointOptions.Authorization);
+            }
+
+            using (var client = new HttpClient())
+            {
+                var result = client.Send(request);
+
+                if (result.IsSuccessStatusCode)
+                {
+                    var data = result.Content.ReadFromJsonAsync<IEnumerable<T>>().GetAwaiter().GetResult();
+
+                    var tenants = data!.Select(func).ToArray();
+
+                    if (tenants.Length == 0)
+                    {
+                        throw new Exception($"No tenant found on the endpoint {endpointOptions.Url}");
+                    }
+
+                    return tenants;
+                }
+                else
+                {
+                    var statusCode = result.StatusCode;
+
+                    var reason = result.ReasonPhrase;
+
+                    var content = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+                    throw new Exception($@"Error to load tenants from the url {endpointOptions.Url} StatusCode: {statusCode} Reason: {reason} Content: {content}");
+                }
+            }
+        });
+    }
+
     public MultiTenantOptions WithApplicationName(string applicationName)
     {
         ApplicationName = applicationName;
@@ -88,16 +135,24 @@ public class MultiTenantOptions
         return this;
     }
 
+    public MultiTenantOptions WithSkipTenantCheckPaths(string path)
+    {
+        SkipTenantCheckPaths.Add(path);
+
+        return this;
+    }
+
+    public MultiTenantOptions WithSkipTenantCheckPaths(params string[] path)
+    {
+        SkipTenantCheckPaths.AddRange(path);
+
+        return this;
+    }
+
     public MultiTenantOptions WithCustomTenantConfigurationSource<T>() where T : ITenantConfigurationSource
     {
         CustomMultiTenantConfigurationSource = typeof(T);
 
         return this;
-    }
-
-    public class EndpointSettings
-    {
-        public string Url { get; set; }
-        public string Authorization { get; set; }
-    }
+    }    
 }

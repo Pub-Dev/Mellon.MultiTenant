@@ -1,4 +1,3 @@
-
 [![Contributors][contributors-shield]][contributors-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![Issues][issues-shield]][issues-url] [![LinkedIn][linkedin-shield]][linkedin-url] [![LinkedIn][linkedin-shield]][linkedin2-url]
 
 ## Mellon.MultiTenant by [@PubDev](https://www.youtube.com/@PubDev)
@@ -56,6 +55,7 @@ There are two ways to configure the settings, via config and through the api
     "CookieKey": "tenant-name",
     "QueryStringKey": "tenant-name",
     "TenantSource": "Settings",
+    "SkipTenantCheckPaths": ["^/swagger.*"],
     "Tenants": [
       "client-a",
       "client-b",
@@ -64,15 +64,16 @@ There are two ways to configure the settings, via config and through the api
 }
 ```
 
-|     Property      |                                                                        Description                                                                         |             Default              |
-| :---------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------: |
-|  ApplicationName  |                                                                      Application name                                                                      | IHostEnvironment.ApplicationName |
-|   HttpHeaderKey   |                                                   HTTP Header key, where the tenant name will be passed                                                    |              `null`              |
-|     CookieKey     |                                                   HTTP Cookie key, where the tenant name will be passed                                                    |              `null`              |
-|  QueryStringKey   |                                                HTTP Query String key, where the tenant name will be passed                                                 |              `null`              |
-|   TenantSource    |                    Where the list of possible tenants will be stored, it can be from two sources: `Settings` or `EnvironmentVariables`                     |            `Settings`            |
-|      Tenants      |                            When the property `TenantSource` is set to `Settings` this property must contain the list of tenants                            |              `null`              |
-| WithDefaultTenant | When the tenant is not defined by the caller the lib will set the tenant as the tenant defined within this property, use it just when actually needed 😉👍 |              `null`              |
+|       Property       |                                                                        Description                                                                         |             Default              |
+| :------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------: |
+|   ApplicationName    |                                                                      Application name                                                                      | IHostEnvironment.ApplicationName |
+|    HttpHeaderKey     |                                                   HTTP Header key, where the tenant name will be passed                                                    |              `null`              |
+|      CookieKey       |                                                   HTTP Cookie key, where the tenant name will be passed                                                    |              `null`              |
+|    QueryStringKey    |                                                HTTP Query String key, where the tenant name will be passed                                                 |              `null`              |
+|     TenantSource     |                    Where the list of possible tenants will be stored, it can be from two sources: `Settings` or `EnvironmentVariables`                     |            `Settings`            |
+|       Tenants        |                            When the property `TenantSource` is set to `Settings` this property must contain the list of tenants                            |              `null`              |
+|  WithDefaultTenant   | When the tenant is not defined by the caller the lib will set the tenant as the tenant defined within this property, use it just when actually needed 😉👍 |              `null`              |
+| SkipTenantCheckPaths |             Endpoints which the tenant do not need to be identified, for example: Swagger endpoints, you can use a regex string `^/swagger.*`              |              `null`              |
 
 When `TenantSource` is set to `EnvironmentVariables` it will get the tenant list from the environment variable `MULTITENANT_TENANTS`, this environment variable must contain the list of possible tenants in a single string, separating the tenants using `,`
 for example:
@@ -118,6 +119,14 @@ builder.Services
 
 - Set for when the tenant is not defined by the caller the lib will set the tenant as the tenant defined within this property, use it just when needed 😉👍
 
+### `WithSkipTenantCheckPaths(string)`
+
+- Add a path that will be skipped during the tenant identification
+
+### `WithSkipTenantCheckPaths(params string[])`
+
+- Add paths that will be skipped during the tenant identification
+
 #### `LoadFromSettings`
 
 - Set for when the tenant list will be loaded from the settings **MultiTenant:Tenants**
@@ -125,6 +134,76 @@ builder.Services
 #### `LoadFromEnvironmentVariable`
 
 - Set for when the tenant list will be loaded from the environment variable **MULTITENANT_TENANTS**
+
+#### `LoadFromEndpoint(Func<EndpointSettings, IConfiguration, string[]> func)` and `LoadFromEndpoint<T>(Func<T, string> func)`
+
+- Define a Func or pass a type to define how the tenant list will be loaded from a http endpoint, to make it work you need to pass a new set of properties on the app settings
+
+```json
+"MultiTenant": {
+    // other settings...
+    "Endpoint": {
+      "Url": "[endpoint]",
+      "Method": "GET",
+      "Authorization": "Basic $user $password"
+    },
+    // other settings...
+}
+```
+
+If the endpoint has authorization you can set the credencials on the property `Authorization`
+
+You can pass the Func and do what you see fit when getting the list of tenants
+
+Example:
+
+```csharp
+services
+    .AddMultiTenant(options => options.LoadFromEndpoint((endpointOptions, configuration) =>
+        {
+            var request = new HttpRequestMessage()
+            {
+                RequestUri = new Uri(endpointOptions.Url),
+                Method = new HttpMethod(endpointOptions.Method),
+            };
+
+            if (!string.IsNullOrEmpty(endpointOptions.Authorization))
+            {
+                request.Headers.Add("Authorization", endpointOptions.Authorization);
+            }
+
+            using (var client = new HttpClient())
+            {
+                var result = client.Send(request);
+
+                if (result.IsSuccessStatusCode)
+                {
+                    var data = result.Content.ReadFromJsonAsync<IEnumerable<Tenant>>().GetAwaiter().GetResult();
+
+                    return data!.Select(x => x.Id).ToArray();
+                }
+                else
+                {
+                    var statusCode = result.StatusCode;
+
+                    var reason = result.ReasonPhrase;
+
+                    var content = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+                    throw new Exception($@"Error to load tenants from the url {endpointOptions.Url} StatusCode: {statusCode} Reason: {reason} Content: {content}");
+                }
+            }
+        }));
+```
+
+Or if your use case does not require customization you can just call the other method, Which behind the scene does basically a http request to the endpoint set on the `Endpoint` settings, respecting the `Url`, `Method` and `Authorization`
+
+Example:
+
+```csharp
+services
+    .AddMultiTenant(options => options.LoadFromEndpoint<Tenant>(x => x.TenantId));
+```
 
 #### `WithHttpContextLoad(Func<HttpContext, string> func)`
 
@@ -515,7 +594,7 @@ PS: this will work only with AzureAppConfiguration and SpringCloudConfig
 - [x] Add new Config Source
 - [x] Load the Tenants from a web-api request
 - [x] Enable the usage with HangFire
-- [ ] Update documentation with new features
+- [x] Update documentation with new features
 
 See the [open issues](https://github.com/Pub-Dev/Mellon.MultiTenant/issues) for a full list of proposed features (and known issues).
 
