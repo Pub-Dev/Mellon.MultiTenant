@@ -50,7 +50,7 @@ public class HttpTenantIdentifierMiddleware
         {
             if (tenantSettings.Tenant is null)
             {
-                throw new Exception("Tenand not identified!");
+                throw new Exception("Tenant not identified!");
             }
         }
 
