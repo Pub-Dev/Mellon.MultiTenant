@@ -27,8 +27,8 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="3.2.3" />
-		<PackageReference Include="Steeltoe.Extensions.Configuration.PlaceholderCore" Version="3.2.3" />
+		<PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="3.2.4" />
+		<PackageReference Include="Steeltoe.Extensions.Configuration.PlaceholderCore" Version="3.2.4" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
 
