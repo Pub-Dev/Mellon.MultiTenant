@@ -1,19 +1,15 @@
+using Mellon.MultiTenant.Base.Exceptions;
 using Microsoft.Extensions.Configuration;
 
 namespace Mellon.MultiTenant.Base;
 
-public class TenantSettings
+public class TenantSettings(MultiTenantSettings multiTenantSettings)
 {
-    private readonly MultiTenantSettings _multiTenantSettings;
+    private readonly MultiTenantSettings _multiTenantSettings = multiTenantSettings;
 
     public string Tenant { get; private set; }
 
     public IConfiguration Configuration => Tenant is null ? null : _multiTenantSettings.GetConfigurations[Tenant];
-
-    public TenantSettings(MultiTenantSettings multiTenantSettings)
-    {
-        _multiTenantSettings = multiTenantSettings;
-    }
 
     public void SetCurrentTenant(string tenant)
     {
@@ -23,7 +19,7 @@ public class TenantSettings
         }
         else
         {
-            throw new Exception($"Tenant {tenant} not found");
+            throw new TenantNotFoundException(tenant);
         }
     }
 }

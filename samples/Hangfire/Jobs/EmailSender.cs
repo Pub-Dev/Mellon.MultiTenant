@@ -4,23 +4,13 @@ using Mellon.MultiTenant.Interfaces;
 
 namespace WebApiHangfire.Jobs;
 
-public class EmailSender : IEmailSender
+public class EmailSender(ILogger<EmailSender> logger,
+        IMultiTenantConfiguration multiTenantConfiguration) : IEmailSender
 {
-    private readonly ILogger<EmailSender> _logger;
-    private readonly IMultiTenantConfiguration _multiTenantConfiguration;
-
-    public EmailSender(
-        ILogger<EmailSender> logger,
-        IMultiTenantConfiguration multiTenantConfiguration)
-    {
-        _logger = logger;
-
-        _multiTenantConfiguration = multiTenantConfiguration;
-    }
-
+   
     public async Task ExecuteAsync()
     {
-        _logger.LogInformation($"Processing e-mail sending for {_multiTenantConfiguration.Tenant}");
+        logger.LogInformation($"Processing e-mail sending for {multiTenantConfiguration.Tenant}");
 
         await Task.FromResult(true);
     }
