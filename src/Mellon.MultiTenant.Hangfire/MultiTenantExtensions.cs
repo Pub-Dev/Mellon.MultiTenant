@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Mellon.MultiTenant.Hangfire.Filters;
 using Mellon.MultiTenant.Hangfire.Interfaces;
+using Mellon.MultiTenant.Hangfire.JobActivators;
 using Mellon.MultiTenant.Hangfire.JobManagers;
 using Microsoft.Extensions.DependencyInjection;
 

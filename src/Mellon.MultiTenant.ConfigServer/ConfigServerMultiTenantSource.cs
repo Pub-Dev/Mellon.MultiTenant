@@ -5,32 +5,22 @@ using Microsoft.Extensions.Hosting;
 using Steeltoe.Extensions.Configuration.ConfigServer;
 using Steeltoe.Extensions.Configuration.Placeholder;
 
-namespace Mellon.MultiTenant.ConfigServer
+namespace Mellon.MultiTenant.ConfigServer;
+
+public class ConfigServerTenantSource(
+    MultiTenantOptions multiTenantOptions,
+    IHostEnvironment hostEnvironment) : ITenantConfigurationSource
 {
-    public class ConfigServerTenantSource : ITenantConfigurationSource
+    public IConfigurationBuilder AddSource(
+        string tenant,
+        IConfigurationBuilder builder)
     {
-        private readonly MultiTenantOptions _multiTenantOptions;
-        private readonly IHostEnvironment _hostEnvironment;
+        builder
+            .AddConfigServer(
+                hostEnvironment.EnvironmentName,
+                $"{multiTenantOptions.ApplicationName ?? hostEnvironment.ApplicationName}-{tenant}")
+            .AddPlaceholderResolver();
 
-        public ConfigServerTenantSource(
-            MultiTenantOptions multiTenantOptions,
-            IHostEnvironment hostEnvironment)
-        {
-            _multiTenantOptions = multiTenantOptions;
-            _hostEnvironment = hostEnvironment;
-        }
-
-        public IConfigurationBuilder AddSource(
-            string tenant,
-            IConfigurationBuilder builder)
-        {
-            builder
-                .AddConfigServer(
-                    _hostEnvironment.EnvironmentName,
-                    $"{_multiTenantOptions.ApplicationName ?? _hostEnvironment.ApplicationName}-{tenant}")
-                .AddPlaceholderResolver();
-
-            return builder;
-        }
+        return builder;
     }
 }

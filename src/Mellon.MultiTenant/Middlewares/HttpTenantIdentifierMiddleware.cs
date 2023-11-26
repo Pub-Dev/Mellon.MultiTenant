@@ -2,17 +2,15 @@
 using Mellon.MultiTenant.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using System.IO;
 using System.Text.RegularExpressions;
 
 namespace Mellon.MultiTenant.Middlewares;
 
-public class HttpTenantIdentifierMiddleware
+public partial class HttpTenantIdentifierMiddleware
 {
     private readonly RequestDelegate _next;
 
-    private readonly List<Regex> _regexes = new List<Regex>();
+    private readonly List<Regex> _regexes = [];
 
     public HttpTenantIdentifierMiddleware(
         RequestDelegate next,
@@ -25,7 +23,7 @@ public class HttpTenantIdentifierMiddleware
             LoadRegexes(multiTenantOptions.SkipTenantCheckPaths);
         }
 
-        _regexes.Add(new Regex("^/refresh-settings.*"));
+        _regexes.Add(RefreshSettingsRegex());
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -84,4 +82,7 @@ public class HttpTenantIdentifierMiddleware
 
         return false;
     }
+
+    [GeneratedRegex("^/refresh-settings.*")]
+    private static partial Regex RefreshSettingsRegex();
 }

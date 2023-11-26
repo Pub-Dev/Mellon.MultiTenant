@@ -1,4 +1,5 @@
 using Mellon.MultiTenant.Base.Enums;
+using Mellon.MultiTenant.Base.Exceptions;
 using Mellon.MultiTenant.Base.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -7,7 +8,7 @@ namespace Mellon.MultiTenant.Base;
 
 public class MultiTenantSettings
 {
-    private Dictionary<string, IConfigurationRoot> configurations = new Dictionary<string, IConfigurationRoot>();
+    private readonly Dictionary<string, IConfigurationRoot> configurations = [];
 
     public IReadOnlyList<string> Tenants => configurations?.Keys.ToList();
 
@@ -25,7 +26,7 @@ public class MultiTenantSettings
         }
     }
 
-    public string[] LoadTenants(
+    public static string[] LoadTenants(
         MultiTenantOptions multiTenantOptions,
         IConfiguration configuration)
     {
@@ -34,32 +35,31 @@ public class MultiTenantSettings
             case TenantSource.EnvironmentVariables:
                 if (configuration["MULTITENANT_TENANTS"] is null)
                 {
-                    throw new Exception($"MULTITENANT_TENANTS not set!");
+                    throw new TenantSourceNotSetException(TenantSource.EnvironmentVariables);
                 }
                 return configuration["MULTITENANT_TENANTS"].Split(',', StringSplitOptions.RemoveEmptyEntries);
 
             case TenantSource.Settings:
                 if (configuration.GetSection("MultiTenant:Tenants") is null)
                 {
-                    throw new Exception($"MultiTenant:Tenants not set!");
+                    throw new TenantSourceNotSetException(TenantSource.Settings);
                 }
                 return configuration.GetSection("MultiTenant:Tenants").Get<string[]>();
             case TenantSource.Endpoint:
                 var tenants = multiTenantOptions.GetTenantSourceHttpEndpointFunc(multiTenantOptions.Endpoint, configuration);
                 if (tenants.Length == 0)
                 {
-                    throw new Exception($"No Tenants found on the external endpoint!");
+                    throw new TenantSourceNotSetException(TenantSource.Endpoint);
                 }
                 return tenants;
             default:
-                throw new Exception($"{nameof(multiTenantOptions.TenantSource)} not set!");
+                throw new TenantSourceNotSetException(multiTenantOptions.TenantSource);
         }
     }
 
-    public IConfigurationRoot BuildTenantConfiguration(
+    public static IConfigurationRoot BuildTenantConfiguration(
         IHostEnvironment hostEnvironment,
         ITenantConfigurationSource tenantConfigurationSource,
-        MultiTenantOptions multiTenantOptions,
         string tenant)
     {
         var builder = new ConfigurationBuilder()

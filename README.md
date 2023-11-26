@@ -20,7 +20,7 @@ This library was created to supply a set of tools to enable the creation of mult
 
 ### Built With
 
-- [net7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
+- [net8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 - [steeltoe](https://docs.steeltoe.io/api/v3/configuration)
 - [Azure App Configuration](https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview)
 - [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/reference/html)

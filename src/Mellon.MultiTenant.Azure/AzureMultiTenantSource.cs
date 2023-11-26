@@ -1,45 +1,34 @@
 ﻿using Mellon.MultiTenant.Base.Interfaces;
 using Microsoft.Extensions.Configuration;
 
-namespace Mellon.MultiTenant.Azure
+namespace Mellon.MultiTenant.Azure;
+
+public class AzureTenantSource(
+    IServiceProvider serviceProvider,
+    AzureMultiTenantOptions azureMultiTenantOptions) : ITenantConfigurationSource
 {
-    public class AzureTenantSource : ITenantConfigurationSource
+    public IConfigurationBuilder AddSource(
+        string tenant,
+        IConfigurationBuilder builder)
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly AzureMultiTenantOptions _azureMultiTenantOptions;
-
-        public AzureTenantSource(
-            IServiceProvider serviceProvider,
-            AzureMultiTenantOptions azureMultiTenantOptions)
+        if (azureMultiTenantOptions.AzureAppConfigurationOptions is null)
         {
-            _serviceProvider = serviceProvider;
-
-            _azureMultiTenantOptions = azureMultiTenantOptions;
-        }
-
-        public IConfigurationBuilder AddSource(
-            string tenant,
-            IConfigurationBuilder builder)
-        {
-            if (_azureMultiTenantOptions.AzureAppConfigurationOptions is null)
+            if (azureMultiTenantOptions.AzureAppConfigurationConnectionString is null)
             {
-                if (_azureMultiTenantOptions.AzureAppConfigurationConnectionString is null)
-                {
-                    throw new Exception($"AzureAppConfigurationOptions is required when using Azure");
-                }
-
-                builder.AddAzureAppConfiguration(options =>
-                    options
-                        .Connect(_azureMultiTenantOptions.AzureAppConfigurationConnectionString)
-                        .Select("*", tenant)
-                );
-            }
-            else
-            {
-                builder.AddAzureAppConfiguration(_azureMultiTenantOptions.AzureAppConfigurationOptions(_serviceProvider, tenant));
+                throw new Exception($"AzureAppConfigurationOptions is required when using Azure");
             }
 
-            return builder;
+            builder.AddAzureAppConfiguration(options =>
+                options
+                    .Connect(azureMultiTenantOptions.AzureAppConfigurationConnectionString)
+                    .Select("*", tenant)
+            );
         }
+        else
+        {
+            builder.AddAzureAppConfiguration(azureMultiTenantOptions.AzureAppConfigurationOptions(serviceProvider, tenant));
+        }
+
+        return builder;
     }
 }

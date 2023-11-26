@@ -3,25 +3,12 @@ using Hangfire.Console;
 using Hangfire.Server;
 using Hangfire.States;
 using Hangfire.Storage;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Mellon.MultiTenant.Hangfire.Filters;
 
-internal class MultiTenantClientFilter : IClientFilter, IServerFilter, IApplyStateFilter
+internal class MultiTenantClientFilter(ILogger<MultiTenantClientFilter> logger) : IClientFilter, IServerFilter, IApplyStateFilter
 {
-    private readonly ILogger<MultiTenantClientFilter> _logger;
-    private readonly IServiceScopeFactory _factory;
-
-    public MultiTenantClientFilter(
-        ILogger<MultiTenantClientFilter> logger,
-        IServiceScopeFactory factory
-        )
-    {
-        _logger = logger;
-        _factory = factory;
-    }
-
     public void OnCreating(CreatingContext filterContext)
     {
         var tenantName = ExtractTenantFromContext(filterContext);
@@ -33,7 +20,7 @@ internal class MultiTenantClientFilter : IClientFilter, IServerFilter, IApplySta
     {
         var tenantName = default(string);
 
-        if (filterContext.Parameters.TryGetValue("RecurringJobId", out object jobId) && jobId.ToString().Contains("@"))
+        if (filterContext.Parameters.TryGetValue("RecurringJobId", out object jobId) && jobId.ToString().Contains('@'))
         {
             tenantName = jobId.ToString().Split("@").First();
         }
@@ -50,7 +37,7 @@ internal class MultiTenantClientFilter : IClientFilter, IServerFilter, IApplySta
             }
         }
 
-        if (string.IsNullOrEmpty(tenantName) && filterContext.InitialState is ScheduledState scheduledState)
+        if (string.IsNullOrEmpty(tenantName) && filterContext.InitialState is ScheduledState)
         {
             tenantName = filterContext.Job.Queue;
         }
@@ -64,7 +51,7 @@ internal class MultiTenantClientFilter : IClientFilter, IServerFilter, IApplySta
 
         filterContext.Parameters.TryGetValue("TenantName", out var tenantName);
 
-        _logger.LogInformation(
+        logger.LogInformation(
             "Job `{recurringJobId}` that is based on method `{Name}` has been created with id `{Id}` for Tenant `{tenant}`",
             jobId,
             filterContext.Job.Method.Name,
@@ -88,10 +75,6 @@ internal class MultiTenantClientFilter : IClientFilter, IServerFilter, IApplySta
 
     public void OnStateApplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
     {
-        var id = context.BackgroundJob.Id;
-
-        var state = context.Connection.GetStateData(id);
-
         var queue = context.GetJobParameter<string>("TenantName");
 
         if (!string.IsNullOrWhiteSpace(queue))

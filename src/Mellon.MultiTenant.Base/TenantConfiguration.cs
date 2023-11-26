@@ -4,19 +4,13 @@ using Microsoft.Extensions.Primitives;
 
 namespace Mellon.MultiTenant.Base;
 
-public class TenantConfiguration : IMultiTenantConfiguration
+public class TenantConfiguration(
+    TenantSettings tenantSettings,
+    IConfiguration configuration) : IMultiTenantConfiguration
 {
-    public string Tenant { get; }
+    public string Tenant { get; } = tenantSettings.Tenant;
 
-    public IConfiguration Configuration { get; }
-
-    public TenantConfiguration(
-        TenantSettings tenantSettings,
-        IConfiguration configuration)
-    {
-        Tenant = tenantSettings.Tenant;
-        Configuration = tenantSettings.Configuration ?? configuration;
-    }
+    public IConfiguration Configuration { get; } = tenantSettings.Configuration ?? configuration;
 
     public string this[string key] { get => Configuration[key]; set => Configuration[key] = value; }
 

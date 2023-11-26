@@ -4,32 +4,32 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Mellon.MultiTenant.Extensions
+namespace Mellon.MultiTenant.Extensions;
+
+public static class MultiTenantExtensions
 {
-    public static class MultiTenantExtensions
+    public static IServiceCollection AddMultiTenantAzureAppConfiguration(
+        this IServiceCollection services,
+        Action<AzureMultiTenantOptions> action = null)
     {
-        public static IServiceCollection AddMultiTenantAzureAppConfiguration(
-            this IServiceCollection services,
-            Action<AzureMultiTenantOptions> action = null)
+        services.AddSingleton<AzureMultiTenantOptions>(serviceProvider =>
         {
-            services.AddSingleton<AzureMultiTenantOptions>(serviceProvider =>
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+            var azureMultiTenantOptions = new AzureMultiTenantOptions
             {
-                var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+                AzureAppConfigurationConnectionString = configuration["AzureAppConfigurationConnectionString"]
+            };
 
-                var azureMultiTenantOptions = new AzureMultiTenantOptions();
+            action?.Invoke(azureMultiTenantOptions);
 
-                azureMultiTenantOptions.AzureAppConfigurationConnectionString = configuration["AzureAppConfigurationConnectionString"];
+            return azureMultiTenantOptions;
+        });
 
-                action?.Invoke(azureMultiTenantOptions);
+        services.RemoveAll<ITenantConfigurationSource>();
 
-                return azureMultiTenantOptions;
-            });
+        services.AddSingleton<ITenantConfigurationSource, AzureTenantSource>();
 
-            services.RemoveAll<ITenantConfigurationSource>();
-
-            services.AddSingleton<ITenantConfigurationSource, AzureTenantSource>();
-
-            return services;
-        }
+        return services;
     }
 }

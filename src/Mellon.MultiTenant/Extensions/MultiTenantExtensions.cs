@@ -4,7 +4,6 @@ using Mellon.MultiTenant.Interfaces;
 using Mellon.MultiTenant.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +29,7 @@ public static class MultiTenantExtensions
 
             var multiTenantOptions = serviceProvider.GetRequiredService<MultiTenantOptions>();
 
-            var tenants = multiTenantSettings.LoadTenants(multiTenantOptions, configuration);
+            var tenants = MultiTenantSettings.LoadTenants(multiTenantOptions, configuration);
 
             if (tenants is null || tenants.Length == 0)
             {
@@ -41,10 +40,9 @@ public static class MultiTenantExtensions
             {
                 multiTenantSettings.LoadConfiguration(
                     tenant,
-                    multiTenantSettings.BuildTenantConfiguration(
+                    MultiTenantSettings.BuildTenantConfiguration(
                         hostEnvironment,
                         multiTenantSource,
-                        multiTenantOptions,
                         tenant));
             }
 
@@ -115,7 +113,6 @@ public static class MultiTenantExtensions
         
         routeBuilder.MapGet("refresh-settings", RefreshEndpoint);
 
-
         return routeBuilder;
     }
 
@@ -151,16 +148,15 @@ public static class MultiTenantExtensions
         }
         else
         {
-            foreach (var tenant in multiTenantSettings.LoadTenants(multiTenantOptions, configuration))
+            foreach (var tenant in MultiTenantSettings.LoadTenants(multiTenantOptions, configuration))
             {
                 if (!TryFindAndRefreshSettings(tenant))
                 {
                     multiTenantSettings.LoadConfiguration(
                         tenant,
-                        multiTenantSettings.BuildTenantConfiguration(
+                        MultiTenantSettings.BuildTenantConfiguration(
                             hostEnvironment,
                             multiTenantSource,
-                            multiTenantOptions,
                             tenant));
                 }
             }

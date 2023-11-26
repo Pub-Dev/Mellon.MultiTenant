@@ -1,14 +1,12 @@
 ﻿using Hangfire;
 using Mellon.MultiTenant.Base;
 using Microsoft.Extensions.DependencyInjection;
+using HangfireAspNetCore = Hangfire.AspNetCore;
 
-public class MultiTenantHangfireJobActivator : Hangfire.AspNetCore.AspNetCoreJobActivator
+namespace Mellon.MultiTenant.Hangfire.JobActivators;
+
+public class MultiTenantHangfireJobActivator(IServiceScopeFactory serviceScopeFactory) : HangfireAspNetCore.AspNetCoreJobActivator(serviceScopeFactory)
 {
-    public MultiTenantHangfireJobActivator(IServiceScopeFactory serviceScopeFactory) :
-        base(serviceScopeFactory)
-    {
-    }
-
     public override JobActivatorScope BeginScope(JobActivatorContext context)
     {
         var scope = base.BeginScope(context);
