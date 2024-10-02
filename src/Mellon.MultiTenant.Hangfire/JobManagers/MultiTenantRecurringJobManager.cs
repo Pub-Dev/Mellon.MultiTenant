@@ -1,10 +1,10 @@
-﻿using Hangfire;
-using Hangfire.Common;
-using Mellon.MultiTenant.Base;
-using Mellon.MultiTenant.Hangfire.Interfaces;
-using Mellon.MultiTenant.Interfaces;
+﻿namespace Mellon.MultiTenant.Hangfire.JobManagers;
 
-namespace Mellon.MultiTenant.Hangfire.JobManagers;
+using global::Hangfire;
+using global::Hangfire.Common;
+using Mellon.MultiTenant.Base;
+using Mellon.MultiTenant.Base.Interfaces;
+using Mellon.MultiTenant.Hangfire.Interfaces;
 
 internal class MultiTenantRecurringJobManager(
     IRecurringJobManager recurringJobManager,
@@ -64,7 +64,7 @@ internal class MultiTenantRecurringJobManager(
 
     private static string GetTenantJobName(string tenant, string recurringJobId)
     {
-        if (recurringJobId.Contains($"{tenant}@"))
+        if (recurringJobId.Contains($"{tenant}@", StringComparison.InvariantCultureIgnoreCase))
         {
             return recurringJobId;
         }

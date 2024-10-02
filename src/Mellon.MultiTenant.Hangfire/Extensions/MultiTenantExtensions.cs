@@ -1,11 +1,12 @@
-﻿using Hangfire;
+﻿#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace Microsoft.Extensions.DependencyInjection;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
+
+using Hangfire;
 using Mellon.MultiTenant.Hangfire.Filters;
 using Mellon.MultiTenant.Hangfire.Interfaces;
 using Mellon.MultiTenant.Hangfire.JobActivators;
 using Mellon.MultiTenant.Hangfire.JobManagers;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Mellon.MultiTenant.Extensions;
 
 public static class MultiTenantExtensions
 {

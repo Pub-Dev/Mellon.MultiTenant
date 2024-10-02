@@ -1,96 +1,95 @@
-﻿using Hangfire.Client;
-using Hangfire.Console;
-using Hangfire.Server;
-using Hangfire.States;
-using Hangfire.Storage;
-using Microsoft.Extensions.Logging;
+﻿namespace Mellon.MultiTenant.Hangfire.Filters;
 
-namespace Mellon.MultiTenant.Hangfire.Filters;
+using global::Hangfire.Client;
+using global::Hangfire.Console;
+using global::Hangfire.Server;
+using global::Hangfire.States;
+using global::Hangfire.Storage;
+using Microsoft.Extensions.Logging;
 
 internal class MultiTenantClientFilter(ILogger<MultiTenantClientFilter> logger) : IClientFilter, IServerFilter, IApplyStateFilter
 {
-    public void OnCreating(CreatingContext filterContext)
-    {
-        var tenantName = ExtractTenantFromContext(filterContext);
+	public void OnCreating(CreatingContext filterContext)
+	{
+		var tenantName = ExtractTenantFromContext(filterContext);
 
-        filterContext.SetJobParameter("TenantName", tenantName);
-    }
+		filterContext.SetJobParameter("TenantName", tenantName);
+	}
 
-    private static string ExtractTenantFromContext(CreatingContext filterContext)
-    {
-        var tenantName = default(string);
+	public void OnCreated(CreatedContext filterContext)
+	{
+		filterContext.Parameters.TryGetValue("RecurringJobId", out var jobId);
 
-        if (filterContext.Parameters.TryGetValue("RecurringJobId", out object jobId) && jobId.ToString().Contains('@'))
-        {
-            tenantName = jobId.ToString().Split("@").First();
-        }
+		filterContext.Parameters.TryGetValue("TenantName", out var tenantName);
 
-        if (string.IsNullOrEmpty(tenantName) && filterContext.InitialState is EnqueuedState enqueuedState)
-        {
-            if (enqueuedState.Queue == EnqueuedState.DefaultQueue)
-            {
-                tenantName = filterContext.Job.Queue;
-            }
-            else
-            {
-                tenantName = enqueuedState.Queue;
-            }
-        }
+		logger.LogInformation(
+			"Job `{recurringJobId}` that is based on method `{Name}` has been created with id `{Id}` for Tenant `{tenant}`",
+			jobId,
+			filterContext.Job.Method.Name,
+			filterContext.BackgroundJob?.Id,
+			tenantName);
+	}
 
-        if (string.IsNullOrEmpty(tenantName) && filterContext.InitialState is ScheduledState)
-        {
-            tenantName = filterContext.Job.Queue;
-        }
+	public void OnPerforming(PerformingContext filterContext)
+	{
+		var tenantName = filterContext.GetJobParameter<string>("TenantName");
 
-        return tenantName;
-    }
+		filterContext.WriteLine(ConsoleTextColor.Yellow, $"Starting job for the tenant {tenantName} 🚀");
+	}
 
-    public void OnCreated(CreatedContext filterContext)
-    {
-        filterContext.Parameters.TryGetValue("RecurringJobId", out var jobId);
+	public void OnPerformed(PerformedContext filterContext)
+	{
+		var tenantName = filterContext.GetJobParameter<string>("TenantName");
 
-        filterContext.Parameters.TryGetValue("TenantName", out var tenantName);
+		filterContext.WriteLine(ConsoleTextColor.Yellow, $"Process completed for the {tenantName} 🚀");
+	}
 
-        logger.LogInformation(
-            "Job `{recurringJobId}` that is based on method `{Name}` has been created with id `{Id}` for Tenant `{tenant}`",
-            jobId,
-            filterContext.Job.Method.Name,
-            filterContext.BackgroundJob?.Id,
-            tenantName);
-    }
+	public void OnStateApplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
+	{
+		var queue = context.GetJobParameter<string>("TenantName");
 
-    public void OnPerforming(PerformingContext filterContext)
-    {
-        var tenantName = filterContext.GetJobParameter<string>("TenantName");
+		if (!string.IsNullOrWhiteSpace(queue))
+		{
+			if (context.NewState is EnqueuedState newState)
+			{
+				if (string.Equals(newState.Queue, "tenant-name", StringComparison.InvariantCultureIgnoreCase))
+				{
+					newState.Queue = queue;
+				}
+			}
+		}
+	}
 
-        filterContext.WriteLine(ConsoleTextColor.Yellow, $"Starting job for the tenant {tenantName} 🚀");
-    }
+	public void OnStateUnapplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
+	{
+	}
 
-    public void OnPerformed(PerformedContext filterContext)
-    {
-        var tenantName = filterContext.GetJobParameter<string>("TenantName");
+	private static string ExtractTenantFromContext(CreatingContext filterContext)
+	{
+		var tenantName = default(string);
 
-        filterContext.WriteLine(ConsoleTextColor.Yellow, $"Process completed for the {tenantName} 🚀");
-    }
+		if (filterContext.Parameters.TryGetValue("RecurringJobId", out var jobId) && jobId.ToString().Contains('@', StringComparison.InvariantCultureIgnoreCase))
+		{
+			tenantName = jobId.ToString().Split("@")[0];
+		}
 
-    public void OnStateApplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
-    {
-        var queue = context.GetJobParameter<string>("TenantName");
+		if (string.IsNullOrEmpty(tenantName) && filterContext.InitialState is EnqueuedState enqueuedState)
+		{
+			if (string.Equals(enqueuedState.Queue, EnqueuedState.DefaultQueue, StringComparison.InvariantCultureIgnoreCase))
+			{
+				tenantName = filterContext.Job.Queue;
+			}
+			else
+			{
+				tenantName = enqueuedState.Queue;
+			}
+		}
 
-        if (!string.IsNullOrWhiteSpace(queue))
-        {
-            if (context.NewState is EnqueuedState newState)
-            {
-                if (newState.Queue == "tenant-name")
-                {
-                    newState.Queue = queue;
-                }
-            }
-        }
-    }
+		if (string.IsNullOrEmpty(tenantName) && filterContext.InitialState is ScheduledState)
+		{
+			tenantName = filterContext.Job.Queue;
+		}
 
-    public void OnStateUnapplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
-    {
-
-    }
+		return tenantName;
+	}
 }
