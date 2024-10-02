@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Mellon.MultiTenant.Azure\Mellon.MultiTenant.Azure.csproj" />
-    <ProjectReference Include="..\..\src\Mellon.MultiTenant.ConfigServer\Mellon.MultiTenant.ConfigServer.csproj" />
-    <ProjectReference Include="..\..\src\Mellon.MultiTenant\Mellon.MultiTenant.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\Mellon.MultiTenant.Azure\Mellon.MultiTenant.Azure.csproj" />
+		<ProjectReference Include="..\..\src\Mellon.MultiTenant.ConfigServer\Mellon.MultiTenant.ConfigServer.csproj" />
+		<ProjectReference Include="..\..\src\Mellon.MultiTenant\Mellon.MultiTenant.csproj" />
+	</ItemGroup>
+
 </Project>
