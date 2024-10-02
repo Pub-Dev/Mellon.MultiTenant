@@ -1,158 +1,161 @@
+﻿namespace Mellon.MultiTenant.Base;
+
+using System.Net.Http.Json;
 using Mellon.MultiTenant.Base.Enums;
 using Mellon.MultiTenant.Base.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
-
-namespace Mellon.MultiTenant.Base;
 
 public class MultiTenantOptions
 {
-    public TenantSource TenantSource { get; set; } = TenantSource.Settings;
+	public TenantSource TenantSource { get; set; } = TenantSource.Settings;
 
-    public string ApplicationName { get; set; }
+	public string ApplicationName { get; set; }
 
-    public string HttpHeaderKey { get; set; }
+	public string HttpHeaderKey { get; set; }
 
-    public string QueryStringKey { get; set; }
+	public string QueryStringKey { get; set; }
 
-    public string CookieKey { get; set; }
+	public string CookieKey { get; set; }
 
-    public string DefaultTenant { get; set; }
+	public string DefaultTenant { get; set; }
 
-    public List<string> SkipTenantCheckPaths { get; set; }
+	public List<string> SkipTenantCheckPaths { get; set; }
 
-    public Func<HttpContext, string> GetTenantFromHttClientFunc { get; private set; }
+	public Func<HttpContext, string> GetTenantFromHttClientFunc { get; private set; }
 
-    public Type CustomMultiTenantConfigurationSource { get; private set; }
+	public Type CustomMultiTenantConfigurationSource { get; private set; }
 
-    public Func<EndpointSettings, IConfiguration, string[]> GetTenantSourceHttpEndpointFunc { get; private set; }
+	public Func<EndpointSettings, IConfiguration, Task<string[]>> GetTenantSourceHttpEndpointFunc { get; private set; }
 
-    public EndpointSettings Endpoint { get; set; }
+	public EndpointSettings Endpoint { get; set; }
 
-    public MultiTenantOptions LoadFromSettings()
-    {
-        TenantSource = TenantSource.Settings;
+	public MultiTenantOptions LoadFromSettings()
+	{
+		TenantSource = TenantSource.Settings;
 
-        return this;
-    }
+		return this;
+	}
 
-    public MultiTenantOptions LoadFromEnvironmentVariable()
-    {
-        TenantSource = TenantSource.EnvironmentVariables;
+	public MultiTenantOptions LoadFromEnvironmentVariable()
+	{
+		TenantSource = TenantSource.EnvironmentVariables;
 
-        return this;
-    }
+		return this;
+	}
 
-    public MultiTenantOptions LoadFromEndpoint(Func<EndpointSettings, IConfiguration, string[]> func)
-    {
-        TenantSource = TenantSource.Endpoint;
+	public MultiTenantOptions LoadFromEndpoint(Func<EndpointSettings, IConfiguration, Task<string[]>> func)
+	{
+		TenantSource = TenantSource.Endpoint;
 
-        GetTenantSourceHttpEndpointFunc = func;
+		GetTenantSourceHttpEndpointFunc = func;
 
-        return this;
-    }
+		return this;
+	}
 
-    public MultiTenantOptions LoadFromEndpoint<T>(Func<T, string> func)
-    {
-        return LoadFromEndpoint((endpointOptions, configuration) =>
-        {
-            var request = new HttpRequestMessage()
-            {
-                RequestUri = new Uri(endpointOptions.Url),
-                Method = new HttpMethod(endpointOptions.Method ?? "GET"),
-            };
+	public MultiTenantOptions LoadFromEndpoint<T>(Func<T, string> func) =>
+		LoadFromEndpoint(async (endpointOptions, configuration) =>
+		{
+			var request = new HttpRequestMessage()
+			{
+				RequestUri = new Uri(endpointOptions.Url),
+				Method = new HttpMethod(endpointOptions.Method ?? "GET"),
+			};
 
-            if (!string.IsNullOrEmpty(endpointOptions.Authorization))
-            {
-                request.Headers.Add("Authorization", endpointOptions.Authorization);
-            }
+			if (!string.IsNullOrEmpty(endpointOptions.Authorization))
+			{
+				request.Headers.Add("Authorization", endpointOptions.Authorization);
+			}
 
-            using (var client = new HttpClient())
-            {
-                var result = client.Send(request);
+			using var client = new HttpClient();
 
-                if (result.IsSuccessStatusCode)
-                {
-                    var data = result.Content.ReadFromJsonAsync<IEnumerable<T>>().GetAwaiter().GetResult();
+			var result = await client.SendAsync(request);
 
-                    var tenants = data!.Select(func).ToArray();
+			if (result.IsSuccessStatusCode)
+			{
+				var data = await result.Content.ReadFromJsonAsync<IEnumerable<T>>();
 
-                    if (tenants.Length == 0)
-                    {
-                        throw new Exception($"No tenant found on the endpoint {endpointOptions.Url}");
-                    }
+				var tenants = data!.Select(func).ToArray();
 
-                    return tenants;
-                }
-                else
-                {
-                    var statusCode = result.StatusCode;
+				if (tenants.Length == 0)
+				{
+					throw new Exception($"No tenant found on the endpoint {endpointOptions.Url}");
+				}
 
-                    var reason = result.ReasonPhrase;
+				return tenants;
+			}
+			else
+			{
+				var statusCode = result.StatusCode;
 
-                    var content = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+				var reason = result.ReasonPhrase;
 
-                    throw new Exception($@"Error to load tenants from the url {endpointOptions.Url} StatusCode: {statusCode} Reason: {reason} Content: {content}");
-                }
-            }
-        });
-    }
+				var content = await result.Content.ReadAsStringAsync();
 
-    public MultiTenantOptions WithApplicationName(string applicationName)
-    {
-        ApplicationName = applicationName;
-        return this;
-    }
+				throw new Exception($@"Error to load tenants from the url {endpointOptions.Url} StatusCode: {statusCode} Reason: {reason} Content: {content}");
+			}
+		});
 
-    public MultiTenantOptions WithHttpHeader(string httpHeader)
-    {
-        HttpHeaderKey = httpHeader;
-        return this;
-    }
+	public MultiTenantOptions WithApplicationName(string applicationName)
+	{
+		ApplicationName = applicationName;
 
-    public MultiTenantOptions WithQueryString(string queryString)
-    {
-        QueryStringKey = queryString;
-        return this;
-    }
+		return this;
+	}
 
-    public MultiTenantOptions WithCookie(string cookieName)
-    {
-        CookieKey = cookieName;
-        return this;
-    }
+	public MultiTenantOptions WithHttpHeader(string httpHeader)
+	{
+		HttpHeaderKey = httpHeader;
 
-    public MultiTenantOptions WithHttpContextLoad(Func<HttpContext, string> func)
-    {
-        GetTenantFromHttClientFunc = func;
-        return this;
-    }
+		return this;
+	}
 
-    public MultiTenantOptions WithDefaultTenant(string defaultTenant)
-    {
-        DefaultTenant = defaultTenant;
-        return this;
-    }
+	public MultiTenantOptions WithQueryString(string queryString)
+	{
+		QueryStringKey = queryString;
 
-    public MultiTenantOptions WithSkipTenantCheckPaths(string path)
-    {
-        SkipTenantCheckPaths.Add(path);
+		return this;
+	}
 
-        return this;
-    }
+	public MultiTenantOptions WithCookie(string cookieName)
+	{
+		CookieKey = cookieName;
 
-    public MultiTenantOptions WithSkipTenantCheckPaths(params string[] path)
-    {
-        SkipTenantCheckPaths.AddRange(path);
+		return this;
+	}
 
-        return this;
-    }
+	public MultiTenantOptions WithHttpContextLoad(Func<HttpContext, string> func)
+	{
+		GetTenantFromHttClientFunc = func;
 
-    public MultiTenantOptions WithCustomTenantConfigurationSource<T>() where T : ITenantConfigurationSource
-    {
-        CustomMultiTenantConfigurationSource = typeof(T);
+		return this;
+	}
 
-        return this;
-    }    
+	public MultiTenantOptions WithDefaultTenant(string defaultTenant)
+	{
+		DefaultTenant = defaultTenant;
+
+		return this;
+	}
+
+	public MultiTenantOptions WithSkipTenantCheckPaths(string path)
+	{
+		SkipTenantCheckPaths.Add(path);
+
+		return this;
+	}
+
+	public MultiTenantOptions WithSkipTenantCheckPaths(params string[] path)
+	{
+		SkipTenantCheckPaths.AddRange(path);
+
+		return this;
+	}
+
+	public MultiTenantOptions WithCustomTenantConfigurationSource<T>() where T : IMultiTenantConfigurationSource
+	{
+		CustomMultiTenantConfigurationSource = typeof(T);
+
+		return this;
+	}
 }

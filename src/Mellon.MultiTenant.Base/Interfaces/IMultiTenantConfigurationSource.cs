@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿namespace Mellon.MultiTenant.Base.Interfaces;
 
-namespace Mellon.MultiTenant.Base.Interfaces;
+using Microsoft.Extensions.Configuration;
 
-public interface ITenantConfigurationSource
+public interface IMultiTenantConfigurationSource
 {
-    IConfigurationBuilder AddSource(string tenant, IConfigurationBuilder builder);
+	IConfigurationBuilder AddSource(string tenant, IConfigurationBuilder builder);
 }
