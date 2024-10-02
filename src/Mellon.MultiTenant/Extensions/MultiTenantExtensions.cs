@@ -1,6 +1,10 @@
-﻿using Mellon.MultiTenant.Base;
+﻿#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace Microsoft.Extensions.DependencyInjection;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
+
+using Mellon.MultiTenant;
+using Mellon.MultiTenant.Base;
 using Mellon.MultiTenant.Base.Interfaces;
-using Mellon.MultiTenant.Interfaces;
 using Mellon.MultiTenant.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -9,159 +13,159 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Mellon.MultiTenant.Extensions;
-
 public static class MultiTenantExtensions
 {
-    private static IServiceCollection AddMultiTenant(
-        this IServiceCollection services,
-        MultiTenantOptions multiTenantOptions)
-    {
-        services.AddSingleton<MultiTenantSettings>((serviceProvider) =>
-        {
-            var multiTenantSettings = new MultiTenantSettings();
+	public static IServiceCollection AddMultiTenant(this IServiceCollection services, Action<MultiTenantOptions> options)
+	{
+		var multiTenantOptions = new MultiTenantOptions();
 
-            var hostEnvironment = serviceProvider.GetRequiredService<IHostEnvironment>();
+		options(multiTenantOptions);
 
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+		return services.AddMultiTenant(multiTenantOptions);
+	}
 
-            var multiTenantSource = serviceProvider.GetRequiredService<ITenantConfigurationSource>();
+	public static IServiceCollection AddMultiTenant(this IServiceCollection services)
+	{
+		var multiTenantOptions = new MultiTenantOptions();
 
-            var multiTenantOptions = serviceProvider.GetRequiredService<MultiTenantOptions>();
+		return services.AddMultiTenant(multiTenantOptions);
+	}
 
-            var tenants = MultiTenantSettings.LoadTenants(multiTenantOptions, configuration);
+	public static IApplicationBuilder UseMultiTenant(
+		this IApplicationBuilder builder)
+	{
+		builder.UseMiddleware<HttpTenantIdentifierMiddleware>();
 
-            if (tenants is null || tenants.Length == 0)
-            {
-                throw new Exception("Invalid Configuration");
-            }
+		if (builder is IEndpointRouteBuilder routeBuilder)
+		{
+			routeBuilder.AddRefreshEndpoint();
+		}
 
-            foreach (var tenant in tenants)
-            {
-                multiTenantSettings.LoadConfiguration(
-                    tenant,
-                    MultiTenantSettings.BuildTenantConfiguration(
-                        hostEnvironment,
-                        multiTenantSource,
-                        tenant));
-            }
+		builder.ApplicationServices.GetRequiredService<MultiTenantSettings>();
 
-            return multiTenantSettings;
-        });
+		return builder;
+	}
 
-        services.AddSingleton<MultiTenantOptions>((serviceProvider) =>
-        {
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+	private static IServiceCollection AddMultiTenant(
+		this IServiceCollection services,
+		MultiTenantOptions multiTenantOptions)
+	{
+		services.AddSingleton((serviceProvider) =>
+		{
+			var multiTenantSettings = new MultiTenantSettings();
 
-            configuration.GetSection("MultiTenant").Bind(multiTenantOptions);
+			var hostEnvironment = serviceProvider.GetRequiredService<IHostEnvironment>();
 
-            return multiTenantOptions;
-        });
+			var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-        services.AddScoped<TenantSettings>();
+			var multiTenantSource = serviceProvider.GetRequiredService<IMultiTenantConfigurationSource>();
 
-        if (multiTenantOptions.CustomMultiTenantConfigurationSource is null)
-        {
-            services.AddSingleton<ITenantConfigurationSource, LocalTenantSource>();
-        }
-        else
-        {
-            services.AddSingleton(
-                typeof(ITenantConfigurationSource),
-                multiTenantOptions.CustomMultiTenantConfigurationSource);
-        }
+			var multiTenantOptions = serviceProvider.GetRequiredService<MultiTenantOptions>();
 
-        services.AddScoped<IMultiTenantConfiguration, TenantConfiguration>();
+			var tenants = MultiTenantSettings.LoadTenantsAsync(multiTenantOptions, configuration).GetAwaiter().GetResult();
 
-        return services;
-    }
+			if (tenants is null || tenants.Length == 0)
+			{
+				throw new Exception("Invalid Configuration");
+			}
 
-    public static IServiceCollection AddMultiTenant(this IServiceCollection services, Action<MultiTenantOptions> options)
-    {
-        var multiTenantOptions = new MultiTenantOptions();
+			foreach (var tenant in tenants)
+			{
+				multiTenantSettings.LoadConfiguration(
+					tenant,
+					MultiTenantSettings.BuildTenantConfiguration(
+						hostEnvironment,
+						multiTenantSource,
+						tenant));
+			}
 
-        options(multiTenantOptions);
+			return multiTenantSettings;
+		});
 
-        return services.AddMultiTenant(multiTenantOptions);
-    }
+		services.AddSingleton((serviceProvider) =>
+		{
+			var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-    public static IServiceCollection AddMultiTenant(this IServiceCollection services)
-    {
-        var multiTenantOptions = new MultiTenantOptions();
+			configuration.GetSection("MultiTenant").Bind(multiTenantOptions);
 
-        return services.AddMultiTenant(multiTenantOptions);
-    }
+			return multiTenantOptions;
+		});
 
-    public static IApplicationBuilder UseMultiTenant(
-        this IApplicationBuilder builder)
-    {
-        builder.UseMiddleware<HttpTenantIdentifierMiddleware>();
+		services.AddScoped<TenantSettings>();
 
-        if (builder is IEndpointRouteBuilder routeBuilder)
-        {
-            routeBuilder.AddRefreshEndpoint();
-        }
+		if (multiTenantOptions.CustomMultiTenantConfigurationSource is null)
+		{
+			services.AddSingleton<IMultiTenantConfigurationSource, LocalMultiTenantSource>();
+		}
+		else
+		{
+			services.AddSingleton(
+				typeof(IMultiTenantConfigurationSource),
+				multiTenantOptions.CustomMultiTenantConfigurationSource);
+		}
 
-        builder.ApplicationServices.GetRequiredService<MultiTenantSettings>();
+		services.AddScoped<IMultiTenantConfiguration, TenantConfiguration>();
 
-        return builder;
-    }
+		return services;
+	}
 
-    private static IEndpointRouteBuilder AddRefreshEndpoint(this IEndpointRouteBuilder routeBuilder)
-    {
-        routeBuilder.MapGet("refresh-settings/{tenantName?}", RefreshEndpoint);
-        
-        routeBuilder.MapGet("refresh-settings", RefreshEndpoint);
+	private static IEndpointRouteBuilder AddRefreshEndpoint(this IEndpointRouteBuilder routeBuilder)
+	{
+		routeBuilder.MapGet("refresh-settings/{tenantName?}", RefreshEndpointAsync);
 
-        return routeBuilder;
-    }
+		routeBuilder.MapGet("refresh-settings", RefreshEndpointAsync);
 
-    private static IResult RefreshEndpoint(
-                string tenantName,
-                IConfiguration configuration,
-                IHostEnvironment hostEnvironment,
-                ITenantConfigurationSource multiTenantSource,
-                MultiTenantOptions multiTenantOptions,
-                MultiTenantSettings multiTenantSettings)
-    {
-        bool TryFindAndRefreshSettings(string tenantName)
-        {
-            if (multiTenantSettings.GetConfigurations.TryGetValue(tenantName, out var conf))
-            {
-                if (conf is IConfigurationRoot configurationRoot)
-                {
-                    configurationRoot.Reload();
-                }
+		return routeBuilder;
+	}
 
-                return true;
-            }
+	private static async Task<IResult> RefreshEndpointAsync(
+				string tenantName,
+				IConfiguration configuration,
+				IHostEnvironment hostEnvironment,
+				IMultiTenantConfigurationSource multiTenantSource,
+				MultiTenantOptions multiTenantOptions,
+				MultiTenantSettings multiTenantSettings)
+	{
+		bool TryFindAndRefreshSettings(string tenantName)
+		{
+			if (multiTenantSettings.GetConfigurations.TryGetValue(tenantName, out var conf))
+			{
+				if (conf is IConfigurationRoot configurationRoot)
+				{
+					configurationRoot.Reload();
+				}
 
-            return false;
-        }
+				return true;
+			}
 
-        if (!string.IsNullOrEmpty(tenantName))
-        {
-            if (!TryFindAndRefreshSettings(tenantName))
-            {
-                return Results.NotFound(new { Message = "Tenant not found" });
-            }
-        }
-        else
-        {
-            foreach (var tenant in MultiTenantSettings.LoadTenants(multiTenantOptions, configuration))
-            {
-                if (!TryFindAndRefreshSettings(tenant))
-                {
-                    multiTenantSettings.LoadConfiguration(
-                        tenant,
-                        MultiTenantSettings.BuildTenantConfiguration(
-                            hostEnvironment,
-                            multiTenantSource,
-                            tenant));
-                }
-            }
-        }
+			return false;
+		}
 
-        return Results.Ok(new { Message = "Refresh Done!" });
-    }
+		if (!string.IsNullOrEmpty(tenantName))
+		{
+			if (!TryFindAndRefreshSettings(tenantName))
+			{
+				return Results.NotFound(new { Message = "Tenant not found" });
+			}
+		}
+		else
+		{
+			var tenants = await MultiTenantSettings.LoadTenantsAsync(multiTenantOptions, configuration);
+
+			foreach (var tenant in tenants)
+			{
+				if (!TryFindAndRefreshSettings(tenant))
+				{
+					multiTenantSettings.LoadConfiguration(
+						tenant,
+						MultiTenantSettings.BuildTenantConfiguration(
+							hostEnvironment,
+							multiTenantSource,
+							tenant));
+				}
+			}
+		}
+
+		return Results.Ok(new { Message = "Refresh Done!" });
+	}
 }

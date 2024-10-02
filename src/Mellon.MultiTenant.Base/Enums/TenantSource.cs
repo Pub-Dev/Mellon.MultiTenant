@@ -1,8 +1,8 @@
-namespace Mellon.MultiTenant.Base.Enums;
+﻿namespace Mellon.MultiTenant.Base.Enums;
 
 public enum TenantSource
 {
-    EnvironmentVariables,
-    Settings,
-    Endpoint
+	EnvironmentVariables,
+	Settings,
+	Endpoint,
 }

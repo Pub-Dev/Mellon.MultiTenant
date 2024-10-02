@@ -1,21 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿namespace WebApi;
 
-namespace WebApi;
+using Microsoft.EntityFrameworkCore;
+using WebApi.Entities;
 
 public class DataBaseContext : DbContext
 {
-    public DbSet<Product> Products { get; set; }
+	public DataBaseContext(DbContextOptions<DataBaseContext> options)
+		: base(options)
+	{
+	}
 
-    public DataBaseContext(DbContextOptions<DataBaseContext> options)
-        : base(options)
-    { }
-}
-
-public class Product
-{
-    [Key]
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public int Quantity { get; set; }
+	public DbSet<Product> Products { get; set; }
 }

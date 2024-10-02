@@ -1,39 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Title>Mellon.MultiTenant.ConfigServer</Title>
-    <PackageId>Mellon-MultiTenant-ConfigServer</PackageId>
-    <Authors>1berto and Naga</Authors>
-    <Company>PubDev</Company>
-    <Description>A Package to create Multi-Tenant Applications using NET</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://pub-dev.github.io/Mellon.MultiTenant/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/1bberto/Mellon.MultiTenant</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageIcon>logo.png</PackageIcon>
-    <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>false</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Title>Mellon.MultiTenant.ConfigServer</Title>
+		<PackageId>Mellon-MultiTenant-ConfigServer</PackageId>
+		<Authors>1berto and Naga</Authors>
+		<Company>PubDev</Company>
+		<Description>A Package to create Multi-Tenant Applications using NET</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://pub-dev.github.io/Mellon.MultiTenant/</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/1bberto/Mellon.MultiTenant</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageIcon>logo.png</PackageIcon>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>false</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\readme.md" Pack="true" PackagePath="\" />
-    <None Include="..\..\logo.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\readme.md" Pack="true" PackagePath="\" />
+		<None Include="..\..\logo.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="3.2.5" />
-    <PackageReference Include="Steeltoe.Extensions.Configuration.PlaceholderCore" Version="3.2.5" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" />
+		<PackageReference Include="Steeltoe.Extensions.Configuration.PlaceholderCore" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Mellon.MultiTenant.Base\Mellon.MultiTenant.Base.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Mellon.MultiTenant.Base\Mellon.MultiTenant.Base.csproj" />
+	</ItemGroup>
 
 </Project>

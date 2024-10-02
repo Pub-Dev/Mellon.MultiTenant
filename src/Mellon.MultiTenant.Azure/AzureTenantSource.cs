@@ -1,11 +1,11 @@
-﻿using Mellon.MultiTenant.Base.Interfaces;
-using Microsoft.Extensions.Configuration;
+﻿namespace Mellon.MultiTenant.Azure;
 
-namespace Mellon.MultiTenant.Azure;
+using Mellon.MultiTenant.Base.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 public class AzureTenantSource(
     IServiceProvider serviceProvider,
-    AzureMultiTenantOptions azureMultiTenantOptions) : ITenantConfigurationSource
+    AzureMultiTenantOptions azureMultiTenantOptions) : IMultiTenantConfigurationSource
 {
     public IConfigurationBuilder AddSource(
         string tenant,
@@ -21,8 +21,7 @@ public class AzureTenantSource(
             builder.AddAzureAppConfiguration(options =>
                 options
                     .Connect(azureMultiTenantOptions.AzureAppConfigurationConnectionString)
-                    .Select("*", tenant)
-            );
+                    .Select("*", tenant));
         }
         else
         {

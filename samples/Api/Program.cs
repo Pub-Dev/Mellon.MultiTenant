@@ -1,6 +1,5 @@
 ﻿using Mellon.MultiTenant.Base;
-using Mellon.MultiTenant.Extensions;
-using Mellon.MultiTenant.Interfaces;
+using Mellon.MultiTenant.Base.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using WebApi;
 
@@ -9,46 +8,38 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMultiTenant();
 
 builder.Services.AddDbContext<DataBaseContext>(
-    (IServiceProvider serviceProvider, DbContextOptionsBuilder options) =>
-    {
-        var configuration = serviceProvider.GetRequiredService<IMultiTenantConfiguration>();
+	(IServiceProvider serviceProvider, DbContextOptionsBuilder options) =>
+	{
+		var configuration = serviceProvider.GetRequiredService<IMultiTenantConfiguration>();
 
-        options.UseSqlServer(configuration?["ConnectionStrings:DefaultConnection"]);
-    });
-
+		options.UseSqlServer(configuration?["ConnectionStrings:DefaultConnection"]);
+	});
 
 var app = builder.Build();
 
 app.UseMultiTenant();
 
-app.MapGet("/", (IMultiTenantConfiguration configuration) =>
+app.MapGet("/", (IMultiTenantConfiguration configuration) => new
 {
-    return new
-    {
-        Tenant = configuration.Tenant,
-        Message = configuration["Message"],
-    };
+	configuration.Tenant,
+	Message = configuration["Message"],
 });
 
-app.MapGet("/products", async (DataBaseContext dataBaseContext) =>
-{
-    return await dataBaseContext.Products.ToListAsync();
-});
+app.MapGet("/products", async (DataBaseContext dataBaseContext) => await dataBaseContext.Products.ToListAsync(cancellationToken: app.Lifetime.ApplicationStopped));
 
 var tenants = app.Services.GetRequiredService<MultiTenantSettings>();
 
 foreach (var tenant in tenants.Tenants)
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var tenantSettings = scope.ServiceProvider.GetRequiredService<TenantSettings>();
+	using var scope = app.Services.CreateScope();
 
-        tenantSettings.SetCurrentTenant(tenant);
+	var tenantSettings = scope.ServiceProvider.GetRequiredService<TenantSettings>();
 
-        var db = scope.ServiceProvider.GetRequiredService<DataBaseContext>();
+	tenantSettings.SetCurrentTenant(tenant);
 
-        await db.Database.MigrateAsync();
-    }
+	var db = scope.ServiceProvider.GetRequiredService<DataBaseContext>();
+
+	await db.Database.MigrateAsync(cancellationToken: app.Lifetime.ApplicationStopped);
 }
 
-app.Run();
+await app.RunAsync();

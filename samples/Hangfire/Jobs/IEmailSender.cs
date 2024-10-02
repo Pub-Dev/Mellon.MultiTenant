@@ -1,13 +1,12 @@
-﻿using Hangfire;
+﻿namespace WebApiHangfire.Jobs;
+
+using Hangfire;
 using Hangfire.Server;
 
-namespace WebApiHangfire.Jobs;
-
-[Queue("cron")]
+[Queue("tenant-name")]
 public interface IEmailSender
 {
-    Task ExecuteAsync();
+	Task ExecuteAsync(PerformContext context);
 
-    Task ExecuteLongJobAsync(int name, PerformContext context);
+	Task ExecuteLongJobAsync(int name, PerformContext context);
 }
-
