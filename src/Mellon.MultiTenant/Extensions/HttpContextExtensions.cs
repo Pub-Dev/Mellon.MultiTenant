@@ -1,7 +1,7 @@
-﻿using Mellon.MultiTenant.Base;
-using Microsoft.AspNetCore.Http;
+﻿namespace Mellon.MultiTenant.Extensions;
 
-namespace Mellon.MultiTenant.Extensions;
+using Mellon.MultiTenant.Base;
+using Microsoft.AspNetCore.Http;
 
 internal static class HttpContextExtensions
 {
