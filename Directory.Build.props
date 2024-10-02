@@ -1,0 +1,10 @@
+<Project>
+	<PropertyGroup>
+		<CodeAnalysisRuleSetDirectories>$(SolutionDir)</CodeAnalysisRuleSetDirectories>
+		<CodeAnalysisRuleSet>pubdev.ruleset</CodeAnalysisRuleSet>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<NoWarn>MA0004;NU1507</NoWarn>
+	</PropertyGroup>
+</Project>
