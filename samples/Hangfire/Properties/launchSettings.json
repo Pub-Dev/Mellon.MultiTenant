@@ -2,7 +2,6 @@
   "profiles": {
     "Hangfire": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7299",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

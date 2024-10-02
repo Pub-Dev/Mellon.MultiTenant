@@ -1,33 +1,37 @@
-﻿using Hangfire.Console;
-using Hangfire.Server;
-using Mellon.MultiTenant.Interfaces;
+﻿namespace WebApiHangfire.Jobs;
 
-namespace WebApiHangfire.Jobs;
+using Hangfire.Console;
+using Hangfire.Server;
+using Hangfire.Tags;
+using Mellon.MultiTenant.Base.Interfaces;
 
 public class EmailSender(ILogger<EmailSender> logger,
-        IMultiTenantConfiguration multiTenantConfiguration) : IEmailSender
+		IMultiTenantConfiguration multiTenantConfiguration) : IEmailSender
 {
-   
-    public async Task ExecuteAsync()
-    {
-        logger.LogInformation($"Processing e-mail sending for {multiTenantConfiguration.Tenant}");
+	public Task ExecuteAsync(PerformContext context)
+	{
+		context.AddTags(multiTenantConfiguration.Tenant);
 
-        await Task.FromResult(true);
-    }
+		logger.LogInformation($"Processing e-mail sending for {multiTenantConfiguration.Tenant}");
 
-    public async Task ExecuteLongJobAsync(int name, PerformContext context)
-    {
-        var items = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+		return Task.FromResult(true);
+	}
 
-        var bar = context.WriteProgressBar();
+	public async Task ExecuteLongJobAsync(int name, PerformContext context)
+	{
+		context.AddTags(multiTenantConfiguration.Tenant);
 
-        foreach (var item in items.WithProgress(bar))
-        {
-            context.WriteLine(ConsoleTextColor.Gray, $"Starting the process for the object {item}");
+		var items = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 
-            await Task.Delay(2000);
+		var bar = context.WriteProgressBar();
 
-            context.WriteLine(ConsoleTextColor.Blue, $"process for the object {item} completed!");
-        }
-    }
+		foreach (var item in items.WithProgress(bar))
+		{
+			context.WriteLine(ConsoleTextColor.Gray, $"Starting the process for the object {item}");
+
+			await Task.Delay(2000, context.CancellationToken.ShutdownToken);
+
+			context.WriteLine(ConsoleTextColor.Blue, $"process for the object {item} completed!");
+		}
+	}
 }
